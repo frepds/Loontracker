@@ -1,3 +1,4 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -29,6 +30,7 @@
     --done: #2A3D60; --done-ink: #E6E9EF; --holiday: #8C9CC0; --leave: #6FB197;
   }
   *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
   html { scroll-padding-top: env(safe-area-inset-top, 0px); }
   body {
     margin: 0; background: var(--page); color: var(--ink);
@@ -36,22 +38,28 @@
     font-size: 17px; line-height: 1.5; font-variant-numeric: tabular-nums;
     -webkit-font-smoothing: antialiased;
   }
-  main { max-width: 1040px; margin: 0 auto; padding: clamp(24px, 5vw, 56px) clamp(18px, 4vw, 40px) 64px; }
+  main { max-width: 1080px; margin: 0 auto; padding: clamp(24px, 5vw, 56px) clamp(18px, 4vw, 40px) 64px; }
+  button { font: inherit; color: inherit; }
 
   /* Top cards */
-  .top { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: clamp(28px, 5vw, 48px); }
+  .top { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 12px; margin-bottom: clamp(28px, 5vw, 48px); }
   .card {
-    display: flex; align-items: center; gap: 16px; padding: 14px 20px;
+    display: flex; align-items: center; gap: 14px; padding: 14px 18px;
     background: var(--dial); color: #E9ECF1; border-radius: 14px;
     border: 1px solid color-mix(in srgb, var(--brass) 45%, transparent);
-    min-width: 0;
+    min-width: 0; text-align: left;
   }
-  .card-num { font-size: 2.5rem; font-weight: 500; line-height: 1; color: var(--brass); min-width: 1.3em; text-align: center; white-space: nowrap; }
-  .card-num.small { font-size: 1.65rem; min-width: 0; }
+  button.card { cursor: pointer; }
+  .cd-card { flex-wrap: wrap; gap: 6px 16px; }
+  .cd-card .card-txt { flex-basis: 100%; order: -1; }
+  .cd-pair { display: flex; align-items: baseline; gap: 6px; }
+  .cd-pair .card-num { min-width: 0; }
+  .cd-pair small { font-size: .86rem; color: #AEB7C6; }
+  .card-num { font-size: 2.3rem; font-weight: 500; line-height: 1; color: var(--brass); min-width: 1.2em; text-align: center; white-space: nowrap; }
+  .card-num.small { font-size: 1.45rem; min-width: 0; }
   .card-txt { display: flex; flex-direction: column; flex: 1; min-width: 0; }
-  .card-txt strong { font-weight: 500; font-size: 1.05rem; }
-  .card-txt span { font-size: .88rem; color: #AEB7C6; }
-  .card-amt { font-size: 1.1rem; font-weight: 500; white-space: nowrap; }
+  .card-txt strong { font-weight: 500; font-size: 1.02rem; line-height: 1.3; }
+  .card-txt span { font-size: .86rem; color: #AEB7C6; }
 
   /* Hero */
   .hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(24px, 5vw, 64px); align-items: center; }
@@ -62,9 +70,50 @@
   .counter .tick { font-size: .26em; color: var(--brass); letter-spacing: 0; margin-left: .1em; }
   .sub { margin: 18px 0 0; color: var(--muted); max-width: 34em; }
   .sub strong { color: var(--ink); font-weight: 500; }
-  .bar { margin-top: 26px; height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; }
-  .bar span { display: block; height: 100%; width: 0; background: var(--brass); border-radius: 3px; }
+  .bar { margin-top: 26px; height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; display: flex; }
+  .bar span { display: block; height: 100%; width: 0; background: var(--brass); }
   .bar-labels { display: flex; justify-content: space-between; font-size: .85rem; color: var(--muted); margin-top: 8px; }
+  .alltime { margin-top: 22px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; padding: 14px 0 0; border-top: 1px solid var(--line); }
+  .at-label { color: var(--muted); font-size: .95rem; }
+  .at-amount { font-size: clamp(1.8rem, 5vw, 2.4rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.1; }
+  .at-amount .frac { color: var(--muted); font-size: .6em; }
+  .at-amount .tick { color: var(--brass); font-size: .45em; margin-left: .1em; }
+  .at-sub { flex-basis: 100%; font-size: .85rem; color: var(--muted); }
+  .hours { margin-top: 14px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; }
+  .hours .h-amount { font-size: 1.45rem; font-weight: 400; letter-spacing: -0.01em; }
+  .hours .h-amount small { font-size: .62em; color: var(--muted); }
+  .hours .bar { flex-basis: 100%; margin-top: 4px; height: 4px; }
+  .hours .bar span { background: var(--leave); }
+  .today-box { margin-top: 26px; padding: 16px 18px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+  .tb-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: .9rem; color: var(--muted); }
+  .tb-amount { font-size: 2.3rem; font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; margin: 4px 0 12px; }
+  .tb-amount small { font-size: .5em; color: var(--muted); margin-left: .25em; }
+  .tb-track { position: relative; height: 10px; border-radius: 5px; background: var(--line); }
+  .tb-track span { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--brass); border-radius: 5px; }
+  .tb-track i { position: absolute; top: -4px; width: 3px; height: 18px; border-radius: 2px; background: var(--signal); transform: translateX(-1.5px); left: 0; display: none; }
+  .tb-scale { display: flex; justify-content: space-between; font-size: .78rem; color: var(--muted); margin-top: 6px; }
+  .tb-grid { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 18px; align-items: center; }
+  .tb-ring { width: 120px; height: 120px; display: block; }
+  .tb-ring .ring-bg { fill: none; stroke: var(--line); stroke-width: 10; }
+  .tb-ring .ring-arc { fill: none; stroke: var(--brass); stroke-width: 10; stroke-linecap: round; }
+  .tb-ring .ring-tick { stroke: var(--surface); stroke-width: 2; }
+  .tb-ring .ring-main { fill: var(--ink); font-size: 17px; font-weight: 500; }
+  .tb-ring .ring-sub { fill: var(--muted); font-size: 9.5px; }
+  .tb-end { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); font-size: .9rem; color: var(--muted); }
+  .tb-end input { width: 8.5em; padding: 5px 8px; }
+  .tb-end .pill { font-size: .85rem; padding: 4px 12px; }
+  .tb-end .note { flex-basis: 100%; font-size: .82rem; }
+  .pd-btn { margin-left: auto; flex: none; background: transparent; color: #E9ECF1; border: 1px solid var(--brass); border-radius: 999px; padding: 6px 12px; cursor: pointer; font-size: .88rem; white-space: nowrap; }
+  .pd-btn:hover { background: color-mix(in srgb, var(--brass) 25%, transparent); }
+  .day.sel { box-shadow: inset 0 0 0 2px var(--brass); }
+  .day.sel::after { content: "+"; position: absolute; top: 6px; right: 8px; width: 20px; height: 20px; border-radius: 50%; background: var(--brass); color: var(--dial); display: grid; place-items: center; font-size: .85rem; font-weight: 600; line-height: 1; }
+  .cal-tools { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; margin-bottom: 12px; font-size: .9rem; color: var(--muted); }
+  .sel-box { margin-top: 14px; padding: 16px 18px; background: var(--surface); border: 1px solid var(--brass); border-radius: 14px; display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; }
+  .sel-stats { flex: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 18px; min-width: 0; }
+  .sel-stats span { display: block; font-size: .85rem; color: var(--muted); }
+  .sel-stats strong { font-size: 1.35rem; font-weight: 500; }
+  .sel-stats div:last-child strong { color: var(--brass); }
+  @media (max-width: 560px) { .sel-stats { grid-template-columns: 1fr; } .tb-grid { grid-template-columns: 96px minmax(0, 1fr); gap: 12px; } .tb-ring { width: 96px; height: 96px; } .tb-amount { font-size: 1.8rem; } }
   .dial-wrap { display: flex; justify-content: center; }
   .dial { width: 100%; max-width: 360px; height: auto; display: block; }
 
@@ -75,27 +124,42 @@
   .stat dt { font-size: .9rem; color: var(--muted); }
   .stat dd { margin: 2px 0 0; font-size: 1.55rem; font-weight: 500; letter-spacing: -0.01em; }
 
-  /* Section heads */
-  section.block { margin-top: 48px; }
+  section.block { margin-top: 52px; }
   .head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
   h2 { font-size: 1.35rem; font-weight: 500; margin: 0; }
   .head p { margin: 0; color: var(--muted); font-size: .95rem; }
+  .pill { background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 5px 14px; cursor: pointer; }
+  .pill:disabled { opacity: .35; cursor: default; }
+  .pill.primary { background: var(--ink); color: var(--page); border-color: var(--ink); }
   .nav { display: flex; align-items: center; gap: 6px; }
-  .nav button, .theme-btn {
-    font: inherit; color: var(--ink); background: transparent; border: 1px solid var(--line);
-    border-radius: 999px; padding: 4px 12px; cursor: pointer;
-  }
-  .nav button:disabled { opacity: .35; cursor: default; }
+
+  /* Milestones */
+  .ms { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .m { position: relative; padding: 16px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; text-align: left; min-width: 0; }
+  .m .medal { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; border: 1.5px dashed var(--line); color: var(--muted); font-weight: 500; font-size: .95rem; }
+  .m strong { font-weight: 500; font-size: 1.08rem; line-height: 1.25; }
+  .m span.when { font-size: .85rem; color: var(--muted); }
+  .m .mbar { height: 5px; border-radius: 3px; background: var(--line); overflow: hidden; margin-top: auto; }
+  .m .mbar i { display: block; height: 100%; background: var(--brass); width: 0; }
+  .m.reached { background: var(--dial); border-color: color-mix(in srgb, var(--brass) 50%, transparent); color: #E9ECF1; cursor: pointer; }
+  .m.reached .medal { background: var(--brass); border: none; color: var(--dial); }
+  .m.reached span.when { color: #AEB7C6; }
+  .m.next { border-color: var(--brass); }
 
   /* Calendar */
-  .weekdays, .days { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+  .weekdays, .days { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) repeat(2, minmax(0, .6fr)); gap: 8px; }
+  .day.weekend { cursor: default; background: transparent; border: 1px dashed var(--line); }
+  .day.weekend .n { color: var(--muted); font-weight: 400; }
+  .day.weekend .amt { font-size: .78rem; }
+  .day.weekend.today { border-color: var(--brass); border-style: solid; }
+  .weekdays span.we { color: color-mix(in srgb, var(--muted) 70%, transparent); }
   .weekdays { margin-bottom: 8px; font-size: .85rem; color: var(--muted); }
   .weekdays span { padding-left: 4px; }
   .day {
     position: relative; min-height: 76px; padding: 10px 12px; border-radius: 10px;
     background: var(--surface); border: 1px solid var(--line); overflow: hidden;
     display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start;
-    font: inherit; color: inherit; text-align: left; cursor: pointer;
+    text-align: left; cursor: pointer;
   }
   .day:disabled { cursor: default; }
   .day .n { font-size: 1.05rem; font-weight: 500; position: relative; }
@@ -117,6 +181,19 @@
   .lg-holiday { background: color-mix(in srgb, var(--holiday) 30%, var(--surface)); border-color: var(--holiday) !important; }
   .lg-leave { border: 1px dashed var(--leave) !important; background: color-mix(in srgb, var(--leave) 25%, var(--surface)); }
 
+  /* Vacation */
+  .vk { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 24px; align-items: center; padding: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+  .vk-big { font-size: 3.4rem; font-weight: 300; line-height: 1; letter-spacing: -0.03em; }
+  .vk-big.neg { color: var(--signal); }
+  .vk-main span { display: block; color: var(--muted); }
+  .vk-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .vk-grid span { display: block; font-size: .85rem; color: var(--muted); }
+  .vk-grid strong { font-size: 1.25rem; font-weight: 500; }
+  .vk-bar { grid-column: 1 / -1; margin-top: 0; height: 8px; border-radius: 4px; }
+  .vk-bar .u { background: var(--done); }
+  .vk-bar .p { background: var(--leave); }
+  .vk-foot { grid-column: 1 / -1; margin: 0; font-size: .88rem; color: var(--muted); }
+
   /* History */
   .chart-scroll { overflow-x: auto; }
   .chart { display: grid; grid-template-columns: repeat(12, minmax(44px, 1fr)); gap: 8px; align-items: end; height: 220px; min-width: 560px; padding-top: 22px; }
@@ -128,29 +205,91 @@
   .col.current .fill { background: var(--brass); }
   .col .lbl { font-size: .82rem; color: var(--muted); }
   .col.current .lbl { color: var(--ink); font-weight: 500; }
-  .totals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin-top: 18px; border-top: 1px solid var(--line); }
+  .totals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 18px; border-top: 1px solid var(--line); }
   .totals div { padding: 14px 16px 0 0; }
   .totals div + div { padding-left: 18px; border-left: 1px solid var(--line); }
   .totals span { display: block; font-size: .88rem; color: var(--muted); }
   .totals strong { font-size: 1.3rem; font-weight: 500; }
+  .col .mark { position: absolute; left: -3px; right: -3px; height: 3px; border-radius: 2px; background: var(--leave); box-shadow: 0 0 0 2px var(--page); }
+  .chart-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: .85rem; color: var(--muted); margin-top: 10px; }
+  .chart-legend i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; background: var(--leave); margin-right: 6px; vertical-align: 3px; }
+  .chart-legend b { display: inline-block; width: 11px; height: 11px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; font-weight: 400; }
+
+  /* Loonstrook-check */
+  .strook-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 6px 18px; }
+  .strook { width: 100%; max-width: none; min-width: 660px; }
+  .strook input[type=date] { width: 10.5em; }
+  .strook th { text-align: left; font-weight: 400; font-size: .85rem; color: var(--muted); padding: 10px 0 6px; border-bottom: 1px solid var(--line); }
+  .strook th:not(:first-child), .strook td:not(:first-child) { text-align: right; padding-left: 16px; }
+  .strook tr:last-child td { border-bottom: none; }
+  .strook input { width: 9.5em; text-align: right; padding: 6px 8px; display: inline-block; }
+  .diff-pos { color: var(--leave); font-weight: 500; }
+  .diff-neg { color: var(--signal); font-weight: 500; }
+  .check { display: flex; flex-direction: row; align-items: flex-start; gap: 10px; margin-top: 14px; color: var(--ink); font-size: .95rem; cursor: pointer; }
+  .check input { width: 18px; height: 18px; margin-top: 3px; flex: none; accent-color: var(--brass); }
+  .check small { display: block; color: var(--muted); font-size: .85rem; }
+
+  /* Export */
+  .export { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: flex-end; padding: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+  .export label { min-width: 150px; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+  .seg button { background: transparent; border: none; padding: 8px 16px; cursor: pointer; color: var(--muted); }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: var(--page); }
+  .export-status { width: 100%; margin: 0; font-size: .88rem; color: var(--muted); min-height: 1.3em; }
 
   /* Breakdown */
-  details { margin-top: 48px; border-top: 1px solid var(--line); padding-top: 18px; }
+  details { margin-top: 52px; border-top: 1px solid var(--line); padding-top: 18px; }
   summary { cursor: pointer; font-size: 1.1rem; font-weight: 500; list-style: none; display: flex; align-items: center; gap: 10px; }
   summary::-webkit-details-marker { display: none; }
   summary::before { content: "+"; display: inline-grid; place-items: center; width: 24px; height: 24px; border: 1px solid var(--line); border-radius: 50%; font-weight: 400; transition: transform .2s ease; }
   details[open] summary::before { transform: rotate(45deg); }
-  summary:focus-visible, button:focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; }
+  summary:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; }
   .calc { overflow-x: auto; margin-top: 16px; }
   table { border-collapse: collapse; width: 100%; max-width: 620px; font-size: .97rem; }
   td { padding: 7px 0; border-bottom: 1px solid var(--line); }
   td:last-child { text-align: right; white-space: nowrap; padding-left: 20px; }
   tr.total td { font-weight: 600; border-bottom: none; padding-top: 12px; }
-  .note { color: var(--muted); font-size: .9rem; max-width: 40em; margin-top: 14px; }
+  .note { color: var(--muted); font-size: .9rem; max-width: 42em; margin-top: 14px; }
   footer { margin-top: 40px; display: flex; justify-content: space-between; align-items: center; gap: 12px; color: var(--muted); font-size: .88rem; flex-wrap: wrap; }
+  footer .btns { display: flex; gap: 8px; }
 
+  /* Settings dialog */
+  dialog {
+    width: min(640px, calc(100vw - 24px)); max-height: calc(100% - 24px); padding: 0; border: 1px solid var(--line);
+    border-radius: 16px; background: var(--page); color: var(--ink);
+  }
+  dialog::backdrop { background: rgba(8, 13, 24, .55); }
+  .dlg-head { position: sticky; top: 0; background: var(--page); padding: 18px 22px 12px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; z-index: 1; }
+  .dlg-body { padding: 8px 22px 20px; }
+  .dlg-foot { position: sticky; bottom: 0; background: var(--page); padding: 12px 22px 16px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  fieldset { border: none; padding: 0; margin: 16px 0 0; }
+  legend { font-weight: 500; font-size: 1.02rem; margin-bottom: 8px; padding: 0; }
+  .fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 14px; }
+  label { display: flex; flex-direction: column; gap: 4px; font-size: .88rem; color: var(--muted); }
+  input, select {
+    font: inherit; font-size: 1rem; color: var(--ink); background: var(--surface);
+    border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; width: 100%; min-width: 0;
+  }
+  .hint { font-size: .82rem; color: var(--muted); margin: 8px 0 0; }
+
+  /* Toast + confetti */
+  #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; }
+  .toast {
+    position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 140%);
+    background: var(--dial); color: #E9ECF1; border: 1px solid var(--brass); border-radius: 14px; padding: 14px 18px;
+    display: flex; gap: 14px; align-items: center; z-index: 60; box-shadow: 0 12px 40px rgba(0,0,0,.25);
+    transition: transform .4s cubic-bezier(.2,.8,.2,1), visibility 0s linear .4s; max-width: calc(100vw - 24px); visibility: hidden;
+  }
+  .toast.show { transform: translate(-50%, 0); visibility: visible; transition: transform .4s cubic-bezier(.2,.8,.2,1); }
+  .toast .big { font-size: 1.8rem; }
+  .toast strong { display: block; font-weight: 500; }
+  .toast span { color: #AEB7C6; font-size: .9rem; }
+  .toast button { background: transparent; border: 1px solid rgba(255,255,255,.25); color: #E9ECF1; border-radius: 999px; padding: 4px 12px; cursor: pointer; }
+
+  @media (max-width: 900px) {
+    .ms { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
   @media (max-width: 760px) {
-    .top { grid-template-columns: 1fr; }
     .hero { grid-template-columns: 1fr; }
     .dial { max-width: 300px; }
     .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -160,26 +299,30 @@
     .day .amt { font-size: .72rem; }
     .totals { grid-template-columns: 1fr; }
     .totals div + div { padding-left: 0; border-left: none; }
+    .vk { grid-template-columns: 1fr; }
+    .fields { grid-template-columns: 1fr; }
   }
-  @media (max-width: 480px) {
-    .card { flex-wrap: wrap; gap: 6px 14px; }
-    .card-amt { width: 100%; font-size: 1rem; color: #AEB7C6; }
-  }
-  @media (prefers-reduced-motion: reduce) { summary::before { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { summary::before, .toast { transition: none; } }
+  @media (max-width: 560px) { .weekdays, .days { gap: 4px; } .weekdays span { padding-left: 2px; font-size: .78rem; } .day { min-height: 54px; padding: 6px 5px; border-radius: 8px; } .day .n { font-size: .9rem; } .day .amt { font-size: .6rem; white-space: nowrap; } .day.weekend .amt { display: none; } .day.sel::after { width: 14px; height: 14px; top: 3px; right: 3px; font-size: .7rem; } }
 </style>
 </head>
 <body>
 <main>
   <div class="top">
-    <div class="card" id="payday">
+    <div class="card">
       <span class="card-num" id="pd-num">–</span>
       <span class="card-txt"><strong id="pd-title">dagen tot de loonweek</strong><span id="pd-sub"></span></span>
-      <span class="card-amt" id="pd-amt"></span>
+      <button type="button" class="pd-btn" id="pd-btn" hidden>Loon is binnen ✓</button>
     </div>
-    <div class="card" id="weekend">
+    <div class="card">
       <span class="card-num small" id="wk-num">–</span>
       <span class="card-txt"><strong id="wk-title">tot het weekend</strong><span id="wk-sub"></span></span>
     </div>
+    <button type="button" class="card cd-card" id="cd-card" aria-label="Aftelklok, klik om aan te passen">
+      <span class="card-txt"><strong id="cd-title">Tot uit dienst</strong><span id="cd-sub"></span></span>
+      <span class="cd-pair"><span class="card-num" id="cd-days">–</span><small id="cd-days-lbl">dagen</small></span>
+      <span class="cd-pair"><span class="card-num" id="cd-work">–</span><small id="cd-work-lbl">werkdagen</small></span>
+    </button>
   </div>
 
   <section class="hero">
@@ -191,6 +334,41 @@
       <p class="sub" id="sub">Even rekenen…</p>
       <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="bar"><span id="bar-fill"></span></div>
       <div class="bar-labels"><span>€ 0</span><span id="bar-right"></span></div>
+      <div class="alltime" aria-label="Netto verdiend sinds je begon">
+        <span class="at-label" id="at-label">Totaal sinds je begon</span>
+        <span class="at-amount">€ <span id="at-int">0</span><span class="frac">,<span id="at-cent">00</span></span><span class="tick" id="at-tick">00</span></span>
+        <span class="at-sub" id="at-sub"></span>
+      </div>
+      <div class="hours" aria-label="Gewerkte uren">
+        <span class="at-label" id="h-label">Gewerkte uren</span>
+        <span class="h-amount" id="h-amount">0u</span>
+        <div class="bar" aria-hidden="true"><span id="h-fill"></span></div>
+        <span class="at-sub" id="h-sub"></span>
+      </div>
+      <div class="today-box">
+        <div class="tb-grid">
+          <svg class="tb-ring" viewBox="0 0 120 120" role="img" aria-labelledby="ring-title">
+            <title id="ring-title">Hoeveel van de werkdag nog over is</title>
+            <circle class="ring-bg" cx="60" cy="60" r="50"/>
+            <circle class="ring-arc" id="ring-arc" cx="60" cy="60" r="50" transform="rotate(-90 60 60)"/>
+            <g id="ring-ticks"></g>
+            <text class="ring-main" id="ring-main" x="60" y="62" text-anchor="middle">—</text>
+            <text class="ring-sub" id="ring-sub" x="60" y="78" text-anchor="middle"></text>
+          </svg>
+          <div>
+            <div class="tb-head"><span id="tb-label">Vandaag verdiend</span><span id="tb-rate"></span></div>
+            <div class="tb-amount" id="tb-amount">€ 0,00</div>
+            <div class="tb-track"><span id="tb-fill"></span><i id="tb-now"></i></div>
+            <div class="tb-scale" id="tb-scale"></div>
+          </div>
+        </div>
+        <div class="tb-end" id="tb-end">
+          <span>Vandaag stop ik om</span>
+          <input type="time" id="f-eindvandaag" aria-label="Eindtijd vandaag">
+          <button type="button" class="pill" id="tb-end-reset" hidden></button>
+          <span class="note" id="tb-end-note"></span>
+        </div>
+      </div>
     </div>
     <div class="dial-wrap">
       <svg class="dial" viewBox="0 0 320 320" role="img" aria-labelledby="dial-title">
@@ -222,117 +400,274 @@
   </section>
 
   <dl class="stats">
-    <div class="stat"><dt>Vandaag</dt><dd id="s-today">€ 0,00</dd></div>
+    <div class="stat"><dt>Deze week</dt><dd id="s-week">€ 0,00</dd></div>
     <div class="stat"><dt>Per werkdag</dt><dd id="s-day">€ 0,00</dd></div>
     <div class="stat"><dt>Per uur</dt><dd id="s-hour">€ 0,00</dd></div>
     <div class="stat"><dt>Nog te verdienen deze maand</dt><dd id="s-left">€ 0,00</dd></div>
   </dl>
 
+  <section class="block" aria-labelledby="ms-title">
+    <div class="head"><h2 id="ms-title">Mijlpalen</h2><p id="ms-meta"></p></div>
+    <div class="ms" id="ms"></div>
+  </section>
+
   <section class="block" aria-labelledby="month-title">
     <div class="head">
-      <div>
-        <h2 id="month-title">Kalender</h2>
-        <p id="month-meta"></p>
-      </div>
+      <div><h2 id="month-title">Kalender</h2><p id="month-meta"></p></div>
       <div class="nav">
-        <button type="button" id="prev" aria-label="Vorige maand">‹</button>
-        <button type="button" id="now-btn">Deze maand</button>
-        <button type="button" id="next" aria-label="Volgende maand">›</button>
+        <button type="button" class="pill" id="prev" aria-label="Vorige maand">‹</button>
+        <button type="button" class="pill" id="now-btn">Deze maand</button>
+        <button type="button" class="pill" id="next" aria-label="Volgende maand">›</button>
       </div>
     </div>
-    <div class="weekdays" aria-hidden="true"><span>ma</span><span>di</span><span>wo</span><span>do</span><span>vr</span></div>
+    <div class="cal-tools">
+      <span>Klikken in de kalender:</span>
+      <div class="seg" role="group" aria-label="Wat een klik op een dag doet">
+        <button type="button" id="mode-verlof" aria-pressed="true">Verlof</button>
+        <button type="button" id="mode-sum" aria-pressed="false">Optellen</button>
+      </div>
+    </div>
+    <div class="weekdays" aria-hidden="true"><span>ma</span><span>di</span><span>wo</span><span>do</span><span>vr</span><span class="we">za</span><span class="we">zo</span></div>
     <div class="days" id="days"></div>
     <div class="legend">
       <span><i class="lg-done"></i>Gewerkt</span>
       <span><i class="lg-holiday"></i>Feestdag</span>
       <span><i class="lg-leave"></i>Verlof</span>
-      <span>Klik op een werkdag om verlof aan of uit te zetten.</span>
+      <span id="cal-hint">Klik op een werkdag om verlof aan of uit te zetten.</span>
+    </div>
+    <div class="sel-box" id="sel-box" hidden aria-live="polite">
+      <div class="sel-stats">
+        <div><span id="sel-count">Nog geen dagen gekozen</span><strong id="sel-value">€ 0,00</strong></div>
+        <div><span>Daarvan nog te verdienen</span><strong id="sel-extra">€ 0,00</strong></div>
+        <div><span id="sel-proj-lbl">Je teller komt dan op</span><strong id="sel-proj">€ 0,00</strong></div>
+      </div>
+      <button type="button" class="pill" id="sel-clear">Wis selectie</button>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="vk-title">
+    <div class="head"><h2 id="vk-title">Vakantiedagen</h2><p id="vk-meta"></p></div>
+    <div class="vk">
+      <div class="vk-main">
+        <span class="vk-big" id="vk-days">0</span>
+        <span id="vk-label">dagen vrij te plannen</span>
+      </div>
+      <div class="vk-grid">
+        <div><span>Opgenomen</span><strong id="vk-used">0</strong></div>
+        <div><span>Ingepland</span><strong id="vk-planned">0</strong></div>
+        <div><span id="vk-right-lbl">Jaarrecht</span><strong id="vk-right">0</strong></div>
+      </div>
+      <div class="bar vk-bar" aria-hidden="true"><span class="u" id="vk-bar-u"></span><span class="p" id="vk-bar-p"></span></div>
+      <p class="vk-foot" id="vk-foot"></p>
     </div>
   </section>
 
   <section class="block" aria-labelledby="hist-title">
-    <div class="head">
-      <h2 id="hist-title">Maandhistorie</h2>
-      <p>Netto per maand, je eerste twaalf maanden</p>
-    </div>
+    <div class="head"><h2 id="hist-title">Maandhistorie</h2><p>Netto per maand, je eerste twaalf maanden</p></div>
     <div class="chart-scroll"><div class="chart" id="chart"></div></div>
     <div class="totals">
       <div><span>Verdiend sinds je begon</span><strong id="t-total">€ 0</strong></div>
       <div><span id="t-year-lbl">Verdiend dit jaar</span><strong id="t-year">€ 0</strong></div>
-      <div><span id="t-exp-lbl">Verwacht tot eind van het jaar</span><strong id="t-exp">€ 0</strong></div>
+      <div><span id="t-exp-lbl">Verwacht in heel het jaar</span><strong id="t-exp">€ 0</strong></div>
+    </div>
+    <div class="chart-legend"><span><b style="background:var(--done)"></b>Opgebouwd</span><span><b style="background:var(--brass)"></b>Deze maand</span><span><i></i>Ontvangen volgens loonstrook</span></div>
+  </section>
+
+  <section class="block" aria-labelledby="strook-title">
+    <div class="head"><h2 id="strook-title">Loonstrook-check</h2><p id="strook-meta">Vul na elke storting in wat je echt netto hebt ontvangen</p></div>
+    <div class="strook-wrap">
+      <table class="strook">
+        <thead><tr><th scope="col">Maand</th><th scope="col">Schatting</th><th scope="col">Ontvangen netto</th><th scope="col">Ontvangen op</th><th scope="col">Verschil</th></tr></thead>
+        <tbody id="strook-body"></tbody>
+      </table>
+    </div>
+    <label class="check"><input type="checkbox" id="f-usestrook">
+      <span>Teller baseren op mijn laatste loonstrook<small id="strook-hint">Zodra je een volledige maand hebt ingevuld, rekent de teller met dat bedrag in plaats van de schatting.</small></span>
+    </label>
+  </section>
+
+  <section class="block" aria-labelledby="exp-title">
+    <div class="head"><h2 id="exp-title">Exporteren</h2><p>CSV-bestand, opent direct in Excel of Google Sheets</p></div>
+    <div class="export">
+      <div class="seg" role="group" aria-label="Soort export">
+        <button type="button" id="exp-year-btn" aria-pressed="true">Jaaroverzicht</button>
+        <button type="button" id="exp-month-btn" aria-pressed="false">Maandoverzicht</button>
+      </div>
+      <label id="exp-year-lbl">Jaar<select id="exp-year"></select></label>
+      <label id="exp-month-lbl" hidden>Maand<select id="exp-month"></select></label>
+      <button type="button" class="pill primary" id="exp-go">Download CSV</button>
+      <p class="export-status" id="exp-status" role="status"></p>
     </div>
   </section>
 
   <details>
     <summary>Hoe dit is berekend</summary>
     <div class="calc"><table id="calc"></table></div>
-    <p class="note">Schatting op basis van de loonheffing 2026 (tarieven 35,75% en 37,56%, algemene heffingskorting en arbeidskorting), vakantiegeld maandelijks uitbetaald. Pensioenpremie en andere inhoudingen zitten er niet in. Een werkdag loopt van 9:00 tot 18:00. Feestdagen en verlofdagen worden gewoon doorbetaald, dus de teller loopt op die dagen ook door; ze tellen alleen niet als werkdag. Loonstorting wordt verwacht in de laatste week van de maand.</p>
+    <p class="note" id="calc-note"></p>
   </details>
 
   <footer>
-    <span id="foot-start">Begonnen op 1 oktober 2026</span>
+    <span id="foot-start"></span>
     <span id="sync-state"></span>
-    <button class="theme-btn" id="theme-btn" type="button">Wissel licht/donker</button>
+    <span class="btns">
+      <button class="pill" id="settings-btn" type="button">Instellingen</button>
+      <button class="pill" id="theme-btn" type="button">Licht/donker</button>
+    </span>
   </footer>
 </main>
 
+<dialog id="settings" aria-labelledby="set-title">
+  <div class="dlg-head"><h2 id="set-title">Instellingen</h2><button type="button" class="pill" id="set-close" aria-label="Sluiten">✕</button></div>
+  <div class="dlg-body">
+    <fieldset>
+      <legend>Salaris</legend>
+      <div class="fields">
+        <label>Brutoloon per maand (€)<input type="number" id="f-bruto" min="0" step="1"></label>
+        <label>Vakantiegeld (%)<input type="number" id="f-vg" min="0" step="0.1"></label>
+        <label>Pensioenpremie werknemer (% van bruto)<input type="number" id="f-pensioen" min="0" step="0.1"></label>
+        <label>Startdatum<input type="date" id="f-start"></label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Werkdag</legend>
+      <div class="fields">
+        <label>Begint om<input type="time" id="f-van"></label>
+        <label>Eindigt om<input type="time" id="f-tot"></label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Loonstorting</legend>
+      <div class="fields">
+        <label>Wanneer<select id="f-loonmodus"><option value="week">In de laatste week van de maand</option><option value="dag">Op een vaste dag</option></select></label>
+        <label>Vaste dag van de maand<input type="number" id="f-loondag" min="1" max="31" step="1"></label>
+      </div>
+      <p class="hint">Valt een vaste loondag in het weekend, dan gaat de teller uit van de vrijdag ervoor.</p>
+    </fieldset>
+    <fieldset>
+      <legend>Aftelklok bovenaan</legend>
+      <div class="fields">
+        <label>Naam<input type="text" id="f-eindnaam" maxlength="40" placeholder="uit dienst"></label>
+        <label>Datum<input type="date" id="f-einddatum"></label>
+      </div>
+      <p class="hint">Telt de dagen en jouw werkdagen tot en met deze datum. Verlof en feestdagen tellen niet als werkdag. Laat de datum leeg om de kaart te verbergen.</p>
+    </fieldset>
+    <fieldset>
+      <legend>Vakantiedagen</legend>
+      <div class="fields">
+        <label>Wettelijke dagen per jaar<input type="number" id="f-wet" min="0" step="1"></label>
+        <label>Bovenwettelijke dagen per jaar<input type="number" id="f-bwet" min="0" step="0.5"></label>
+        <label>Uren per vakantiedag<input type="number" id="f-urendag" min="1" step="0.5"></label>
+        <label>Saldo volgens werkgever (uren)<input type="number" id="f-saldo" step="0.5"></label>
+        <label>Saldo geldig op<input type="date" id="f-saldodatum"></label>
+      </div>
+      <p class="hint">Verlof dat je in de kalender zet vanaf deze datum gaat van het saldo af. Op 1 januari komt er een nieuw jaarrecht bij.</p>
+    </fieldset>
+  </div>
+  <div class="dlg-foot">
+    <button type="button" class="pill" id="set-reset">Standaardwaarden</button>
+    <span style="display:flex;gap:8px">
+      <button type="button" class="pill" id="set-cancel">Annuleren</button>
+      <button type="button" class="pill primary" id="set-save">Opslaan</button>
+    </span>
+  </div>
+</dialog>
+
+<canvas id="confetti" aria-hidden="true"></canvas>
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="big">🏅</span>
+  <div><strong id="toast-title"></strong><span id="toast-sub"></span></div>
+  <button type="button" id="toast-close">Top</button>
+</div>
+
 <script>
 (() => {
-  // ---------- Instellingen ----------
-  const CONFIG = {
-    brutoPerMaand: 3500,
-    vakantiegeldPct: 0.08,
-    startDatum: new Date(2026, 9, 1),
-    startUur: 9,
-    eindUur: 18,
+  // ================= Instellingen =================
+  const DEFAULTS = {
+    bruto: 3500, vakantiegeld: 8, pensioen: 0, start: "2026-10-01",
+    van: "09:00", tot: "18:00",
+    loonmodus: "week", loondag: 25,
+    wettelijk: 20, bovenwettelijk: 5, urenPerDag: 8, saldoUren: 40, saldoDatum: "2026-10-04",
+    useStrook: false, eindOverrides: {},
+    eindNaam: "uit dienst", eindDatum: "2026-12-31",
   };
-  const uren = CONFIG.eindUur - CONFIG.startUur;
-  const startDay = new Date(CONFIG.startDatum); startDay.setHours(0, 0, 0, 0);
+  let settings = { ...DEFAULTS };
+  let celebrated = new Set();
+  try {
+    const raw = localStorage.getItem("loonteller-settings");
+    if (raw) { const o = JSON.parse(raw); settings = { ...DEFAULTS, ...(o.settings || {}) }; celebrated = new Set(o.celebrated || []); }
+  } catch (e) {}
 
-  // ---------- Netto ----------
-  function nettoJaar(bruto) {
-    const s1 = 38883, s2 = 78426;
-    let tax = Math.min(bruto, s1) * 0.3575;
-    if (bruto > s1) tax += (Math.min(bruto, s2) - s1) * 0.3756;
-    if (bruto > s2) tax += (bruto - s2) * 0.495;
-    const ahk = Math.max(0, 3115 - 0.06398 * Math.max(0, bruto - 29736));
-    const ak = bruto <= 45592 ? 5685 : Math.max(0, 5685 - 0.0651 * (bruto - 45592));
-    const kortingen = Math.min(tax, ahk + ak);
-    return { bruto, tax, ahk, ak, netto: bruto - (tax - kortingen) };
-  }
-  const jaar = nettoJaar(CONFIG.brutoPerMaand * 12 * (1 + CONFIG.vakantiegeldPct));
-  const nettoMaand = jaar.netto / 12;
-
-  // ---------- Formatting ----------
+  // ================= Helpers =================
   const eur = new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR" });
   const eur0 = new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
   const pctFmt = new Intl.NumberFormat("nl-NL", { style: "percent", maximumFractionDigits: 1 });
+  const num = (n, d = 2) => n.toLocaleString("nl-NL", { maximumFractionDigits: d });
   const pad = n => String(n).padStart(2, "0");
   const keyOf = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const parseDate = s => { const [y, m, d] = String(s).split("-").map(Number); return y ? new Date(y, m - 1, d) : null; };
+  const parseTime = s => { const [h, m] = String(s).split(":").map(Number); return (h || 0) + (m || 0) / 60; };
+  const fmtTime = h => `${pad(Math.floor(h))}:${pad(Math.round((h % 1) * 60))}`;
   const monthName = (y, m) => new Date(y, m, 1).toLocaleDateString("nl-NL", { month: "long" });
   const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
   const dayFmt = d => d.toLocaleDateString("nl-NL", { weekday: "short", day: "numeric", month: "short" });
   const longDay = d => d.toLocaleDateString("nl-NL", { weekday: "long", day: "numeric", month: "long" });
+  const fullDate = d => d.toLocaleDateString("nl-NL", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
   const midnight = d => { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; };
   const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
-  const at = (d, h) => { const x = new Date(d); x.setHours(h, 0, 0, 0); return x; };
+  const at = (d, h) => { const x = new Date(d); x.setHours(Math.floor(h), Math.round((h % 1) * 60), 0, 0); return x; };
   const sameDay = (a, b) => keyOf(a) === keyOf(b);
+  const $ = id => document.getElementById(id);
 
-  // ---------- Feestdagen NL ----------
+  // ================= Afgeleide waarden =================
+  const S = {};
+  function nettoJaar(brutoJaar, pensioenJaar) {
+    const belastbaar = Math.max(0, brutoJaar - pensioenJaar);
+    const s1 = 38883, s2 = 78426;
+    let tax = Math.min(belastbaar, s1) * 0.3575;
+    if (belastbaar > s1) tax += (Math.min(belastbaar, s2) - s1) * 0.3756;
+    if (belastbaar > s2) tax += (belastbaar - s2) * 0.495;
+    const ahk = Math.max(0, 3115 - 0.06398 * Math.max(0, belastbaar - 29736));
+    const ak = belastbaar <= 45592 ? 5685 : Math.max(0, 5685 - 0.0651 * (belastbaar - 45592));
+    const kortingen = Math.min(tax, ahk + ak);
+    return { brutoJaar, pensioenJaar, tax, ahk, ak, netto: brutoJaar - pensioenJaar - (tax - kortingen) };
+  }
+  function applySettings() {
+    S.start = midnight(parseDate(settings.start) || parseDate(DEFAULTS.start));
+    S.startUur = parseTime(settings.van);
+    S.eindUur = parseTime(settings.tot);
+    if (!(S.eindUur > S.startUur)) { S.startUur = 9; S.eindUur = 18; }
+    S.uren = S.eindUur - S.startUur;
+    const brutoJaar = settings.bruto * 12 * (1 + settings.vakantiegeld / 100);
+    S.jaar = nettoJaar(brutoJaar, settings.bruto * 12 * settings.pensioen / 100);
+    S.schattingMaand = S.jaar.netto / 12;
+    S.strookBasis = latestFullStrook();
+    S.nettoMaand = settings.useStrook && S.strookBasis ? S.strookBasis.netto : S.schattingMaand;
+    S.milestones = [
+      { id: "m1000", label: "€ 1.000 verdiend", target: 1000 },
+      { id: "maand1", label: "Eerste maandsalaris", target: S.nettoMaand },
+      { id: "m5000", label: "€ 5.000 verdiend", target: 5000 },
+      { id: "m8000", label: "€ 8.000 verdiend", target: 8000 },
+    ].sort((a, b) => a.target - b.target);
+    S.milestones.forEach(m => { m.date = timeToReach(m.target); });
+    dialFor = ""; holidayCacheReset();
+    $("foot-start").textContent = "Begonnen op " + S.start.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+    renderCalcTable();
+    ringKey = "";
+  }
+
+  // ================= Feestdagen =================
   function easter(y) {
     const a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4;
     const f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3);
     const h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4;
     const l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451);
-    const month = Math.floor((h + l - 7 * m + 114) / 31), day = ((h + l - 7 * m + 114) % 31) + 1;
-    return new Date(y, month - 1, day);
+    return new Date(y, Math.floor((h + l - 7 * m + 114) / 31) - 1, ((h + l - 7 * m + 114) % 31) + 1);
   }
-  const holidayCache = {};
+  let holidayCache = {};
+  function holidayCacheReset() { holidayCache = {}; }
   function holidays(y) {
     if (holidayCache[y]) return holidayCache[y];
-    const map = {};
-    const add = (d, name) => { map[keyOf(d)] = name; };
-    const e = easter(y);
+    const map = {}, add = (d, n) => { map[keyOf(d)] = n; }, e = easter(y);
     add(new Date(y, 0, 1), "Nieuwjaarsdag");
     add(addDays(e, 1), "Tweede paasdag");
     const kd = new Date(y, 3, 27); add(kd.getDay() === 0 ? new Date(y, 3, 26) : kd, "Koningsdag");
@@ -345,96 +680,181 @@
   }
   const holidayName = d => holidays(d.getFullYear())[keyOf(d)] || null;
 
-  // ---------- Verlof (opslag) ----------
+  // ================= Verlof =================
+  let stroken = {};
+  try { const raw = localStorage.getItem("loonteller-stroken"); if (raw) stroken = JSON.parse(raw) || {}; } catch (e) {}
+  const monthKey = (y, m) => `${y}-${pad(m + 1)}`;
+  function latestFullStrook() {
+    const startKey = monthKey(S.start.getFullYear(), S.start.getMonth());
+    const keys = Object.keys(stroken).filter(k => stroken[k] && stroken[k].netto > 0 && (k > startKey || (k === startKey && S.start.getDate() === 1))).sort();
+    if (!keys.length) return null;
+    const k = keys[keys.length - 1];
+    return { key: k, netto: stroken[k].netto };
+  }
+  let strookRef = null, chainK = Promise.resolve();
+  function persistStroken() {
+    try { localStorage.setItem("loonteller-stroken", JSON.stringify(stroken)); } catch (e) {}
+    if (strookRef) chainK = chainK.then(() => strookRef.set({ months: stroken })).catch(() => {});
+  }
   let verlof = new Set();
   try { const raw = localStorage.getItem("loonteller-verlof"); if (raw) verlof = new Set(JSON.parse(raw)); } catch (e) {}
-  let dbRef = null, writeChain = Promise.resolve();
+
+  // ================= Opslag (db + lokaal) =================
+  let verlofRef = null, settingsRef = null, chainV = Promise.resolve(), chainS = Promise.resolve();
   function persistVerlof() {
     const days = [...verlof].sort();
     try { localStorage.setItem("loonteller-verlof", JSON.stringify(days)); } catch (e) {}
-    if (dbRef) writeChain = writeChain.then(() => dbRef.set({ days })).catch(() => {});
+    if (verlofRef) chainV = chainV.then(() => verlofRef.set({ days })).catch(() => {});
+  }
+  function persistSettings() {
+    const doc = { settings, celebrated: [...celebrated] };
+    try { localStorage.setItem("loonteller-settings", JSON.stringify(doc)); } catch (e) {}
+    if (settingsRef) chainS = chainS.then(() => settingsRef.set(doc)).catch(() => {});
   }
   async function connectDb() {
-    for (let i = 0; i < 20 && !(window.claude && typeof window.claude.use === "function"); i++) {
-      await new Promise(r => setTimeout(r, 250));
-    }
+    for (let i = 0; i < 20 && !(window.claude && typeof window.claude.use === "function"); i++) await new Promise(r => setTimeout(r, 250));
     if (!(window.claude && typeof window.claude.use === "function")) return;
     try {
-      const db = await window.claude.use("db");
-      const user = await window.claude.use("user");
+      const db = await window.claude.use("db"), user = await window.claude.use("user");
       if (!db || !user) return;
-      const id = await user.id();
-      if (!id) return;
-      const ref = db.doc("data/users/" + id + "/verlof");
-      const snap = await ref.get();
-      dbRef = ref;
-      if (snap.exists) {
-        const data = snap.data() || {};
-        verlof = new Set(Array.isArray(data.days) ? data.days : []);
-        try { localStorage.setItem("loonteller-verlof", JSON.stringify([...verlof])); } catch (e) {}
-      } else if (verlof.size) {
-        persistVerlof();
-      }
-      document.getElementById("sync-state").textContent = "Verlof wordt opgeslagen";
-      buildCalendar(); refreshSlow(new Date(), true);
+      const id = await user.id(); if (!id) return;
+      const vRef = db.doc("data/users/" + id + "/verlof"), sRef = db.doc("data/users/" + id + "/settings");
+      const kRef = db.doc("data/users/" + id + "/stroken");
+      const [vs, ss, ks] = await Promise.all([vRef.get(), sRef.get(), kRef.get()]);
+      verlofRef = vRef; settingsRef = sRef; strookRef = kRef;
+      if (ks.exists) { const d = ks.data() || {}; stroken = (d.months && typeof d.months === "object") ? { ...d.months } : {}; try { localStorage.setItem("loonteller-stroken", JSON.stringify(stroken)); } catch (e) {} }
+      else if (Object.keys(stroken).length) persistStroken();
+      if (vs.exists) { const d = vs.data() || {}; verlof = new Set(Array.isArray(d.days) ? d.days : []); try { localStorage.setItem("loonteller-verlof", JSON.stringify([...verlof])); } catch (e) {} }
+      else if (verlof.size) persistVerlof();
+      if (ss.exists) {
+        const d = ss.data() || {};
+        settings = { ...DEFAULTS, ...(d.settings || {}) };
+        (d.celebrated || []).forEach(x => celebrated.add(x));
+        try { localStorage.setItem("loonteller-settings", JSON.stringify({ settings, celebrated: [...celebrated] })); } catch (e) {}
+      } else persistSettings();
+      $("sync-state").textContent = "Instellingen, verlof en loonstroken worden opgeslagen";
+      applySettings(); buildCalendar(); renderStroken(); buildExportOptions(); refreshSlow(new Date(), true);
     } catch (e) { /* lokaal blijven werken */ }
   }
 
-  // ---------- Dagen ----------
+  // ================= Dagen & verdiensten =================
   const isWeekday = d => d.getDay() >= 1 && d.getDay() <= 5;
-  const isWorking = d => isWeekday(d) && d >= startDay && !holidayName(d) && !verlof.has(keyOf(d));
+  const isWorking = d => isWeekday(d) && d >= S.start && !holidayName(d) && !verlof.has(keyOf(d));
+  const wdCache = {};
   function weekdaysOfMonth(y, m) {
-    const out = []; const d = new Date(y, m, 1);
+    const k = y + "-" + m; if (wdCache[k]) return wdCache[k];
+    const out = [], d = new Date(y, m, 1);
     while (d.getMonth() === m) { if (isWeekday(d)) out.push(new Date(d)); d.setDate(d.getDate() + 1); }
-    return out;
+    return (wdCache[k] = out);
+  }
+  function eindVoor(d) {
+    const o = settings.eindOverrides && settings.eindOverrides[keyOf(d)];
+    if (o) { const h = parseTime(o); if (h > S.startUur) return h; }
+    return S.eindUur;
   }
   function dayFraction(day, now) {
-    const s = at(day, CONFIG.startUur), e = at(day, CONFIG.eindUur);
+    const s = at(day, S.startUur), e = at(day, eindVoor(day));
     if (now <= s) return 0; if (now >= e) return 1;
     return (now - s) / (e - s);
   }
   function monthData(y, m, now) {
-    const days = weekdaysOfMonth(y, m);
-    const perDay = nettoMaand / days.length;   // vast maandloon, alle ma–vr betaald
+    const days = weekdaysOfMonth(y, m), perDay = S.nettoMaand / days.length;
     let total = 0;
     const info = days.map(d => {
-      const active = d >= startDay;
-      const f = active ? dayFraction(d, now) : 0;
+      const active = d >= S.start, f = active ? dayFraction(d, now) : 0;
       total += f * perDay;
       return { date: d, fraction: f, active, holiday: holidayName(d), leave: verlof.has(keyOf(d)) };
     });
-    const full = info.filter(x => x.active).length * perDay;
-    return { days, perDay, total, info, full };
+    return { days, perDay, total, info, full: info.filter(x => x.active).length * perDay };
+  }
+  function monthTotal(y, m, now) {
+    const days = weekdaysOfMonth(y, m), perDay = S.nettoMaand / days.length;
+    let t = 0; for (const d of days) if (d >= S.start) t += dayFraction(d, now) * perDay;
+    return t;
+  }
+  function earnedUntil(now) {
+    if (now <= S.start) return 0;
+    let y = S.start.getFullYear(), m = S.start.getMonth(), sum = 0;
+    while (y < now.getFullYear() || (y === now.getFullYear() && m <= now.getMonth())) {
+      sum += monthTotal(y, m, now); m++; if (m > 11) { m = 0; y++; }
+    }
+    return sum;
+  }
+  function timeToReach(target) {
+    let lo = S.start.getTime(), hi = addDays(S.start, 365 * 4).getTime();
+    if (earnedUntil(new Date(hi)) < target) return null;
+    for (let i = 0; i < 44; i++) { const mid = (lo + hi) / 2; if (earnedUntil(new Date(mid)) >= target) hi = mid; else lo = mid; }
+    return new Date(hi);
   }
 
-  // ---------- Loonweek ----------
+  // ================= Loonstorting =================
   function payWindow(y, m) {
+    if (settings.loonmodus === "dag") {
+      const last = new Date(y, m + 1, 0).getDate();
+      let d = new Date(y, m, Math.min(Math.max(1, settings.loondag | 0), last));
+      while (!isWeekday(d) || holidayName(d)) d = addDays(d, -1);
+      return { start: d, end: d, fixed: true };
+    }
     const work = weekdaysOfMonth(y, m).filter(d => !holidayName(d));
-    const last = work[work.length - 1];
-    const start = addDays(last, -(last.getDay() - 1));
+    const lastD = work[work.length - 1];
+    const start = addDays(lastD, -(lastD.getDay() - 1));
     if (start.getMonth() !== m) start.setDate(1);
-    return { start, end: last };
+    return { start, end: lastD, fixed: false };
   }
+  function lastReceivedDom() {
+    const ks = Object.keys(stroken).filter(k => stroken[k] && stroken[k].datum).sort();
+    if (!ks.length) return null;
+    const d = parseDate(stroken[ks[ks.length - 1]].datum);
+    return d ? d.getDate() : null;
+  }
+  // Verwachte loondag: zelfde dag van de maand als de laatst ingevulde storting, anders de instelling
+  function expectedPay(y, m) {
+    const dom = lastReceivedDom();
+    if (dom) {
+      const last = new Date(y, m + 1, 0).getDate();
+      let d = new Date(y, m, Math.min(dom, last));
+      while (!isWeekday(d) || holidayName(d)) d = addDays(d, -1);
+      return { start: d, end: d, fixed: true, predicted: true };
+    }
+    return payWindow(y, m);
+  }
+  const payRange = w => w.fixed ? `${w.predicted ? "rond " : ""}${dayFmt(w.start)}` : `${dayFmt(w.start)} t/m ${dayFmt(w.end)}`;
   function renderPayday(now) {
-    let y = now.getFullYear(), m = now.getMonth();
-    let w = payWindow(y, m);
-    if (now > at(w.end, 24)) { m++; if (m > 11) { m = 0; y++; } w = payWindow(y, m); }
-    const box = document.getElementById("payday");
-    document.getElementById("pd-amt").textContent = eur.format(nettoMaand);
-    const startMid = midnight(w.start);
-    if (now >= startMid) {
-      document.getElementById("pd-num").textContent = "💸";
-      document.getElementById("pd-title").textContent = "Loon kan nu elk moment binnenkomen";
-      document.getElementById("pd-sub").textContent = `Uiterlijk ${dayFmt(w.end)}`;
+    const y = now.getFullYear(), m = now.getMonth(), cur = monthKey(y, m);
+    const rec = stroken[cur] && stroken[cur].datum;
+    const btn = $("pd-btn");
+    if (rec) {
+      let ny = y, nm = m + 1; if (nm > 11) { nm = 0; ny++; }
+      const w = expectedPay(ny, nm);
+      const days = Math.max(0, Math.round((midnight(w.start) - midnight(now)) / 86400000));
+      $("pd-num").textContent = days;
+      $("pd-title").textContent = days === 1 ? "dag tot het volgende loon" : "dagen tot het volgende loon";
+      $("pd-sub").textContent = `Loon ${monthName(y, m)} binnen op ${dayFmt(parseDate(rec))} · volgende ${payRange(w)}`;
+      btn.hidden = true;
+      return;
+    }
+    const w = expectedPay(y, m);
+    if (now >= midnight(w.start)) {
+      const late = now > at(w.end, 24);
+      $("pd-num").textContent = "💸";
+      $("pd-title").textContent = late ? `Loon van ${monthName(y, m)} al binnen?` : (w.fixed && sameDay(w.start, now)) ? "Vandaag is het loondag" : "Loon kan nu elk moment binnenkomen";
+      $("pd-sub").textContent = `Verwacht ${payRange(w)}, ~${eur0.format(S.nettoMaand)}`;
+      btn.hidden = false;
     } else {
-      const days = Math.round((startMid - midnight(now)) / 86400000);
-      document.getElementById("pd-num").textContent = days;
-      document.getElementById("pd-title").textContent = days === 1 ? "dag tot de loonweek" : "dagen tot de loonweek";
-      document.getElementById("pd-sub").textContent = `Storting tussen ${dayFmt(w.start)} en ${dayFmt(w.end)}`;
+      const days = Math.round((midnight(w.start) - midnight(now)) / 86400000);
+      $("pd-num").textContent = days;
+      $("pd-title").textContent = w.fixed ? (days === 1 ? "dag tot loondag" : "dagen tot loondag") : (days === 1 ? "dag tot de loonweek" : "dagen tot de loonweek");
+      $("pd-sub").textContent = `${w.predicted ? "Verwacht " : ""}${payRange(w)}, ~${eur0.format(S.nettoMaand)}`;
+      btn.hidden = true;
     }
   }
+  $("pd-btn").addEventListener("click", () => {
+    const n = new Date(), k = monthKey(n.getFullYear(), n.getMonth());
+    stroken[k] = { ...(stroken[k] || {}), datum: keyOf(n) };
+    persistStroken(); renderStroken(); refreshSlow(n, true);
+  });
 
-  // ---------- Weekend / vrij ----------
+  // ================= Weekend =================
   function fmtDur(ms) {
     const s = Math.max(0, Math.floor(ms / 1000));
     const d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), mi = Math.floor((s % 3600) / 60), se = s % 60;
@@ -447,33 +867,201 @@
   }
   function renderWeekend(now) {
     const today = midnight(now);
-    const num = document.getElementById("wk-num"), title = document.getElementById("wk-title"), sub = document.getElementById("wk-sub");
-    const workingNow = isWorking(today) && now < at(today, CONFIG.eindUur);
-    const freeTonightIntoOff = isWorking(today) && now >= at(today, CONFIG.eindUur) && !isWorking(addDays(today, 1));
-    if ((!isWorking(today) || freeTonightIntoOff) && !workingNow) {
+    const workingNow = isWorking(today) && now < at(today, eindVoor(today));
+    const freeTonightIntoOff = isWorking(today) && now >= at(today, eindVoor(today)) && !isWorking(addDays(today, 1));
+    if (!workingNow && (!isWorking(today) || freeTonightIntoOff)) {
       const next = nextWorkingDay(addDays(today, 1));
-      const reason = holidayName(today) || (verlof.has(keyOf(today)) ? "verlof" : null);
-      title.textContent = reason ? `nog vrij (${reason})` : (today.getDay() === 0 || today.getDay() === 6 || freeTonightIntoOff) ? "nog weekend" : "nog vrij";
-      num.textContent = next ? fmtDur(at(next, CONFIG.startUur) - now) : "∞";
-      sub.textContent = next ? `Weer aan het werk ${longDay(next)} om ${CONFIG.startUur}:00` : "";
+      const reason = today >= S.start ? (holidayName(today) || (verlof.has(keyOf(today)) ? "verlof" : null)) : null;
+      $("wk-title").textContent = reason ? `nog vrij (${reason})` : (today.getDay() === 0 || today.getDay() === 6 || freeTonightIntoOff) ? "nog weekend" : "nog vrij";
+      $("wk-num").textContent = next ? fmtDur(at(next, S.startUur) - now) : "∞";
+      $("wk-sub").textContent = next ? `Weer aan het werk ${longDay(next)}, ${fmtTime(S.startUur)}` : "";
       return;
     }
     let s = workingNow ? today : nextWorkingDay(addDays(today, 1));
+    if (!s) return;
     for (let i = 0; i < 400 && isWorking(addDays(s, 1)); i++) s = addDays(s, 1);
-    // Bevat de vrije periode een zaterdag?
     let off = addDays(s, 1), hasSat = false, offDays = 0;
     for (let i = 0; i < 60 && !isWorking(off); i++) { if (off.getDay() === 6) hasSat = true; offDays++; off = addDays(off, 1); }
     const firstOff = addDays(s, 1);
-    let label = "tot het weekend";
-    if (!hasSat) label = `tot je vrij bent (${holidayName(firstOff) || "verlof"})`;
-    else if (offDays > 2) label = "tot een lang weekend";
-    num.textContent = fmtDur(at(s, CONFIG.eindUur) - now);
-    title.textContent = label;
-    sub.textContent = `Vrij vanaf ${longDay(s)}, ${CONFIG.eindUur}:00`;
+    $("wk-title").textContent = !hasSat ? `tot je vrij bent (${holidayName(firstOff) || "verlof"})` : offDays > 2 ? "tot een lang weekend" : "tot het weekend";
+    $("wk-num").textContent = fmtDur(at(s, eindVoor(s)) - now);
+    $("wk-sub").textContent = `Vrij vanaf ${longDay(s)}, ${fmtTime(eindVoor(s))}`;
   }
 
-  // ---------- Dial ----------
-  const ticksG = document.getElementById("ticks"), arc = document.getElementById("arc"), subArc = document.getElementById("sub-arc");
+  // ================= Gewerkte uren =================
+  // Werkuren tot "until": alleen echte werkdagen (geen weekend, feestdag of verlof), met aangepaste eindtijden
+  function workedHours(until) {
+    let h = 0;
+    for (let d = new Date(S.start); d <= until; d = addDays(d, 1)) {
+      if (!isWorking(d)) continue;
+      h += dayFraction(d, until) * (eindVoor(d) - S.startUur);
+    }
+    return h;
+  }
+  const fmtHours = h => { const t = Math.floor(h * 3600), hh = Math.floor(t / 3600), mm = Math.floor((t % 3600) / 60), ss = t % 60; return `${hh.toLocaleString("nl-NL")}u <small>${pad(mm)}m ${pad(ss)}s</small>`; };
+  function renderHours(now) {
+    const done = workedHours(now);
+    $("h-label").textContent = `Gewerkt sinds ${S.start.toLocaleDateString("nl-NL", { day: "numeric", month: "long" })}`;
+    $("h-amount").innerHTML = fmtHours(done);
+    const eind = parseDate(settings.eindDatum);
+    if (eind && eind >= midnight(now)) {
+      const total = workedHours(at(eind, 24)), left = Math.max(0, total - done);
+      $("h-fill").style.width = (total ? Math.min(100, done / total * 100) : 0) + "%";
+      $("h-sub").textContent = `Nog ${num(left, 1)} uur te gaan, ${num(total, 0)} uur in totaal tot ${settings.eindNaam || "de einddatum"}`;
+      $("h-fill").parentElement.hidden = false;
+    } else {
+      $("h-fill").parentElement.hidden = true;
+      const net = earnedUntil(now);
+      $("h-sub").textContent = done > 0 ? `Effectief ${eur.format(net / done)} netto per gewerkt uur` : "";
+    }
+  }
+
+  // ================= Aftelklok =================
+  function renderEindCountdown(now) {
+    const card = $("cd-card"), d = parseDate(settings.eindDatum);
+    card.hidden = !d;
+    if (!d) return;
+    const name = (settings.eindNaam || "").trim() || "uit dienst";
+    const end = midnight(d), today = midnight(now);
+    const days = Math.round((end - today) / 86400000);
+    let work = 0, lastWork = null;
+    for (let x = today; x <= end; x = addDays(x, 1)) {
+      if (!isWorking(x)) continue;
+      lastWork = x;
+      if (sameDay(x, today) && now >= at(x, eindVoor(x))) continue;
+      work++;
+    }
+    $("cd-title").textContent = days >= 0 ? `Tot ${name}` : `${cap(name)} is voorbij`;
+    $("cd-days").textContent = Math.max(0, days);
+    $("cd-days-lbl").textContent = days === 1 ? "dag" : "dagen";
+    $("cd-work").textContent = work;
+    $("cd-work-lbl").textContent = work === 1 ? "werkdag" : "werkdagen";
+    let sub = dayFmt(d);
+    if (lastWork && days >= 0) sub += ` · laatste werkdag ${dayFmt(lastWork)}`;
+    $("cd-sub").textContent = sub;
+  }
+  $("cd-card").addEventListener("click", () => { openSettings(); setTimeout(() => $("f-eindnaam").focus(), 50); });
+
+  // ================= Mijlpalen =================
+  function renderMilestones(now) {
+    const earned = earnedUntil(now), wrap = $("ms");
+    let nextFound = false, reachedCount = 0, html = "";
+    S.milestones.forEach((m, i) => {
+      const reached = earned >= m.target;
+      let cls = "m", medal = String(i + 1), when, bar = "";
+      if (reached) {
+        cls += " reached"; medal = "✓"; reachedCount++;
+        when = m.date ? `Gehaald op ${fullDate(m.date)}` : "Gehaald";
+      } else {
+        when = m.date ? `Verwacht ${fullDate(m.date)}` : "Nog ver weg";
+        if (!nextFound) {
+          nextFound = true; cls += " next";
+          const prev = i > 0 ? S.milestones[i - 1].target : 0;
+          const p = Math.max(0, Math.min(1, (earned - prev) / (m.target - prev)));
+          bar = `<div class="mbar"><i style="width:${p * 100}%"></i></div>`;
+          when += `, nog ${eur0.format(m.target - earned)}`;
+        }
+      }
+      html += `<${reached ? "button type=\"button\"" : "div"} class="${cls}" data-id="${m.id}"${reached ? ' aria-label="' + m.label + ' gehaald, klik om nog eens te vieren"' : ""}><span class="medal">${medal}</span><strong>${m.label}</strong><span class="when">${when}</span>${bar}</${reached ? "button" : "div"}>`;
+    });
+    if (wrap.dataset.html !== html) { wrap.innerHTML = html; wrap.dataset.html = html; }
+    $("ms-meta").textContent = `${reachedCount} van ${S.milestones.length} gehaald`;
+
+    // Vieren
+    const fresh = S.milestones.filter(m => earned >= m.target && !celebrated.has(m.id));
+    if (fresh.length) {
+      fresh.forEach(m => celebrated.add(m.id));
+      persistSettings();
+      celebrate(fresh[fresh.length - 1]);
+    }
+  }
+  $("ms").addEventListener("click", e => {
+    const b = e.target.closest(".m.reached"); if (!b) return;
+    const m = S.milestones.find(x => x.id === b.dataset.id); if (m) celebrate(m);
+  });
+
+  // ================= Confetti & toast =================
+  const canvas = $("confetti"), ctx = canvas.getContext("2d");
+  let confettiRun = 0;
+  function celebrate(m) {
+    $("toast-title").textContent = `Mijlpaal: ${m.label}!`;
+    $("toast-sub").textContent = m.id === "maand1" ? `Een volle maand verdiend, ${eur.format(m.target)} netto.` : "Weer een stap verder. Goed bezig.";
+    const t = $("toast"); t.classList.add("show");
+    clearTimeout(celebrate.timer); celebrate.timer = setTimeout(() => t.classList.remove("show"), 7000);
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = innerWidth * dpr; canvas.height = innerHeight * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const css = getComputedStyle(document.documentElement);
+    const colors = [css.getPropertyValue("--brass"), css.getPropertyValue("--signal"), "#E9ECF1", css.getPropertyValue("--leave"), css.getPropertyValue("--holiday")].map(c => c.trim());
+    const parts = Array.from({ length: 160 }, () => ({
+      x: innerWidth / 2 + (Math.random() - .5) * 120, y: innerHeight * .35,
+      vx: (Math.random() - .5) * 14, vy: -Math.random() * 13 - 4,
+      r: Math.random() * Math.PI, vr: (Math.random() - .5) * .3,
+      w: 6 + Math.random() * 6, h: 3 + Math.random() * 4, c: colors[(Math.random() * colors.length) | 0],
+    }));
+    const run = ++confettiRun, t0 = performance.now();
+    (function frame(ts) {
+      if (run !== confettiRun) return;
+      const el = ts - t0;
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      ctx.globalAlpha = Math.max(0, 1 - Math.max(0, el - 2600) / 900);
+      parts.forEach(p => {
+        p.vy += .32; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore();
+      });
+      if (el < 3500) requestAnimationFrame(frame); else ctx.clearRect(0, 0, innerWidth, innerHeight);
+    })(t0);
+  }
+  $("toast-close").addEventListener("click", () => $("toast").classList.remove("show"));
+
+  // ================= Vakantiedagen =================
+  function yearEntitlementHours(y) {
+    const perYear = (settings.wettelijk + settings.bovenwettelijk) * settings.urenPerDag;
+    if (y < S.start.getFullYear()) return 0;
+    if (y > S.start.getFullYear()) return perYear;
+    const dim = new Date(y, S.start.getMonth() + 1, 0).getDate();
+    const months = 12 - S.start.getMonth() - (S.start.getDate() - 1) / dim;
+    return perYear * months / 12;
+  }
+  function renderVacation(now) {
+    const h = settings.urenPerDag || 8, today = midnight(now), y = now.getFullYear();
+    const peil = midnight(parseDate(settings.saldoDatum) || S.start);
+    let saldo = Number(settings.saldoUren) || 0;
+    for (let yy = peil.getFullYear() + 1; yy <= y; yy++) saldo += yearEntitlementHours(yy);
+    let used = 0, planned = 0, later = 0;
+    verlof.forEach(k => {
+      const d = parseDate(k);
+      if (!d || d < peil || d < S.start || !isWeekday(d) || holidayName(d)) return;
+      if (d.getFullYear() > y) { later += h; return; }
+      const done = d < today || (sameDay(d, today) && now >= at(d, eindVoor(d)));
+      if (done) used += h; else planned += h;
+    });
+    const free = saldo - used - planned;
+    const days = free / h;
+    $("vk-days").textContent = num(days, 2);
+    $("vk-days").classList.toggle("neg", free < 0);
+    $("vk-label").textContent = `${Math.abs(days) === 1 ? "dag" : "dagen"} ${free < 0 ? "te veel ingepland" : "vrij te plannen"}, ${num(Math.abs(free), 1)} uur`;
+    $("vk-used").textContent = `${num(used / h, 2)} d`;
+    $("vk-planned").textContent = `${num(planned / h, 2)} d`;
+    const ent = yearEntitlementHours(y), entDays = ent / h;
+    const frac = y === S.start.getFullYear() ? ent / ((settings.wettelijk + settings.bovenwettelijk) * h || 1) : 1;
+    $("vk-right-lbl").textContent = `Jaarrecht ${y}`;
+    $("vk-right").textContent = `${num(entDays, 2)} d`;
+    const total = Math.max(saldo, used + planned, 1);
+    $("vk-bar-u").style.width = (used / total * 100) + "%";
+    $("vk-bar-p").style.width = (planned / total * 100) + "%";
+    $("vk-meta").textContent = `Saldo ${num(saldo, 1)} uur, ${num(saldo / h, 2)} dagen`;
+    let foot = y === S.start.getFullYear()
+      ? `Jaarrecht ${y} naar rato vanaf je startdatum: ${num(settings.wettelijk * frac, 2)} wettelijke en ${num(settings.bovenwettelijk * frac, 2)} bovenwettelijke dagen. `
+      : `${settings.wettelijk} wettelijke en ${settings.bovenwettelijk} bovenwettelijke dagen per jaar. `;
+    foot += `Wettelijke dagen vervallen in principe zes maanden na het jaar van opbouw, bovenwettelijke pas na vijf jaar.`;
+    if (later) foot += ` Daarnaast heb je ${num(later / h, 2)} ${later / h === 1 ? "dag" : "dagen"} na ${y} ingepland, die gaan van het jaarrecht van dat jaar af.`;
+    $("vk-foot").textContent = foot;
+  }
+
+  // ================= Dial =================
+  const ticksG = $("ticks"), arc = $("arc"), subArc = $("sub-arc");
   const R = 122, C = 2 * Math.PI * R, CS = 2 * Math.PI * 30;
   arc.setAttribute("stroke-dasharray", C); subArc.setAttribute("stroke-dasharray", CS);
   let dialFor = "";
@@ -482,8 +1070,7 @@
     ticksG.innerHTML = "";
     const n = md.days.length;
     md.days.forEach((d, i) => {
-      const a = (i / n) * 2 * Math.PI - Math.PI / 2, mon = d.getDay() === 1;
-      const r1 = mon ? 132 : 136, r2 = 143;
+      const a = (i / n) * 2 * Math.PI - Math.PI / 2, mon = d.getDay() === 1, r1 = mon ? 132 : 136, r2 = 143;
       const l = document.createElementNS("http://www.w3.org/2000/svg", "line");
       l.setAttribute("x1", 160 + r1 * Math.cos(a)); l.setAttribute("y1", 160 + r1 * Math.sin(a));
       l.setAttribute("x2", 160 + r2 * Math.cos(a)); l.setAttribute("y2", 160 + r2 * Math.sin(a));
@@ -492,46 +1079,61 @@
       ticksG.appendChild(l);
     });
     const mn = monthName(y, m);
-    document.getElementById("dial-month").textContent = mn;
-    document.getElementById("lead").textContent = "Netto verdiend in " + mn;
+    $("dial-month").textContent = mn;
+    $("lead").textContent = "Netto verdiend in " + mn;
   }
 
-  // ---------- Kalender ----------
+  // ================= Kalender =================
   const nowInit = new Date();
   let viewY = nowInit.getFullYear(), viewM = nowInit.getMonth();
-  const daysEl = document.getElementById("days");
+  const daysEl = $("days");
+  let calMode = "verlof";
+  const selected = new Set();
   function buildCalendar() {
     daysEl.innerHTML = "";
-    const days = weekdaysOfMonth(viewY, viewM);
-    const offset = days[0].getDay() - 1;
+    const first = new Date(viewY, viewM, 1), offset = (first.getDay() + 6) % 7;
     for (let i = 0; i < offset; i++) { const e = document.createElement("div"); e.className = "day empty"; daysEl.appendChild(e); }
-    days.forEach(d => {
+    const all = [];
+    for (let d = new Date(first); d.getMonth() === viewM; d = addDays(d, 1)) all.push(new Date(d));
+    const todayKey = keyOf(new Date());
+    all.forEach(d => {
+      if (!isWeekday(d)) {
+        const w = document.createElement("div");
+        w.className = "day weekend" + (keyOf(d) === todayKey ? " today" : "");
+        w.setAttribute("aria-label", longDay(d) + ", weekend");
+        w.innerHTML = `<span class="n">${d.getDate()}</span><span class="amt">vrij</span>`;
+        daysEl.appendChild(w);
+        return;
+      }
       const b = document.createElement("button");
-      b.type = "button"; b.className = "day"; b.dataset.key = keyOf(d);
+      b.type = "button"; b.className = "day";
       b.innerHTML = `<span class="n">${d.getDate()}</span><span class="amt"></span>`;
       b.addEventListener("click", () => {
-        if (holidayName(d) || d < startDay) return;
+        if (d < S.start) return;
         const k = keyOf(d);
+        if (calMode === "optellen") { selected.has(k) ? selected.delete(k) : selected.add(k); updateCalendar(new Date()); return; }
+        if (holidayName(d)) return;
         verlof.has(k) ? verlof.delete(k) : verlof.add(k);
-        persistVerlof();
-        refreshSlow(new Date(), true);
+        persistVerlof(); refreshSlow(new Date(), true);
       });
       daysEl.appendChild(b);
     });
-    document.getElementById("month-title").textContent = cap(monthName(viewY, viewM)) + " " + viewY;
-    const before = viewY < startDay.getFullYear() || (viewY === startDay.getFullYear() && viewM <= startDay.getMonth());
-    document.getElementById("prev").disabled = before;
+    $("month-title").textContent = cap(monthName(viewY, viewM)) + " " + viewY;
+    $("prev").disabled = viewY < S.start.getFullYear() || (viewY === S.start.getFullYear() && viewM <= S.start.getMonth());
   }
   function updateCalendar(now) {
     const md = monthData(viewY, viewM, now);
     let done = 0, work = 0, leave = 0, hol = 0;
     daysEl.querySelectorAll("button.day").forEach((el, i) => {
-      const x = md.info[i];
-      el.classList.remove("done", "today", "off", "holiday", "leave");
+      const x = md.info[i]; if (!x) return;
+      el.classList.remove("done", "today", "off", "holiday", "leave", "sel");
+      const isSel = calMode === "optellen" && selected.has(keyOf(x.date));
+      if (isSel) el.classList.add("sel");
+      if (calMode === "optellen") el.setAttribute("aria-pressed", isSel); else el.removeAttribute("aria-pressed");
       const amt = el.querySelector(".amt");
-      let label = `${longDay(x.date)}`;
+      let label = longDay(x.date);
       if (!x.active) { el.classList.add("off"); el.disabled = true; amt.textContent = "—"; el.setAttribute("aria-label", label + ", voor je startdatum"); return; }
-      el.disabled = !!x.holiday;
+      el.disabled = calMode === "verlof" && !!x.holiday;
       if (x.holiday) { el.classList.add("holiday"); amt.textContent = x.holiday; hol++; label += ", " + x.holiday; }
       else if (x.leave) { el.classList.add("leave"); amt.textContent = "Verlof"; leave++; label += ", verlof"; }
       else { work++; if (x.fraction >= 1) done++; }
@@ -542,135 +1144,434 @@
         if (x.fraction >= 1) { el.classList.add("done"); amt.textContent = eur.format(md.perDay); }
         else amt.textContent = eur0.format(md.perDay);
       }
-      el.setAttribute("aria-label", label + (x.holiday ? "" : ", klik om verlof te wisselen"));
+      el.setAttribute("aria-label", label + (calMode === "optellen" ? ", klik om op te tellen" : x.holiday ? "" : ", klik om verlof te wisselen"));
     });
+    renderSelection(md);
     const parts = [`${done} van ${work} werkdagen af`];
     if (leave) parts.push(`${leave} ${leave === 1 ? "verlofdag" : "verlofdagen"}`);
     if (hol) parts.push(`${hol} ${hol === 1 ? "feestdag" : "feestdagen"}`);
-    document.getElementById("month-meta").textContent = parts.join(", ");
+    $("month-meta").textContent = parts.join(", ");
   }
-  document.getElementById("prev").addEventListener("click", () => { viewM--; if (viewM < 0) { viewM = 11; viewY--; } buildCalendar(); updateCalendar(new Date()); });
-  document.getElementById("next").addEventListener("click", () => { viewM++; if (viewM > 11) { viewM = 0; viewY++; } buildCalendar(); updateCalendar(new Date()); });
-  document.getElementById("now-btn").addEventListener("click", () => { const n = new Date(); viewY = n.getFullYear(); viewM = n.getMonth(); buildCalendar(); updateCalendar(n); });
+  function renderSelection(md) {
+    const box = $("sel-box");
+    box.hidden = calMode !== "optellen";
+    if (box.hidden) return;
+    const items = md.info.filter(x => x.active && selected.has(keyOf(x.date)));
+    const value = items.length * md.perDay;
+    const extra = items.reduce((t, x) => t + (1 - x.fraction) * md.perDay, 0);
+    $("sel-count").textContent = items.length ? `${items.length} ${items.length === 1 ? "dag" : "dagen"} samen` : "Nog geen dagen gekozen";
+    $("sel-value").textContent = eur.format(value);
+    $("sel-extra").textContent = eur.format(extra);
+    $("sel-proj-lbl").textContent = `Teller ${monthName(viewY, viewM)} komt dan op`;
+    $("sel-proj").textContent = eur.format(md.total + extra);
+    $("sel-clear").disabled = !items.length;
+  }
+  function setCalMode(mode) {
+    calMode = mode;
+    $("mode-verlof").setAttribute("aria-pressed", mode === "verlof");
+    $("mode-sum").setAttribute("aria-pressed", mode === "optellen");
+    $("cal-hint").textContent = mode === "verlof" ? "Klik op een werkdag om verlof aan of uit te zetten." : "Klik dagen aan om op te tellen wat ze opleveren.";
+    updateCalendar(new Date());
+  }
+  $("mode-verlof").addEventListener("click", () => setCalMode("verlof"));
+  $("mode-sum").addEventListener("click", () => setCalMode("optellen"));
+  $("sel-clear").addEventListener("click", () => { selected.clear(); updateCalendar(new Date()); });
+  $("prev").addEventListener("click", () => { selected.clear(); viewM--; if (viewM < 0) { viewM = 11; viewY--; } buildCalendar(); updateCalendar(new Date()); });
+  $("next").addEventListener("click", () => { selected.clear(); viewM++; if (viewM > 11) { viewM = 0; viewY++; } buildCalendar(); updateCalendar(new Date()); });
+  $("now-btn").addEventListener("click", () => { selected.clear(); const n = new Date(); viewY = n.getFullYear(); viewM = n.getMonth(); buildCalendar(); updateCalendar(n); });
 
-  // ---------- Historie ----------
+  // ================= Historie =================
   function renderHistory(now) {
-    const chart = document.getElementById("chart");
-    chart.innerHTML = "";
-    let y = startDay.getFullYear(), m = startDay.getMonth();
-    let sinceStart = 0, thisYear = 0, expectedYear = 0;
+    const chart = $("chart"); chart.innerHTML = "";
+    let y = S.start.getFullYear(), m = S.start.getMonth(), thisYear = 0, expectedYear = 0;
     for (let i = 0; i < 12; i++) {
       const md = monthData(y, m, now);
       const isCur = y === now.getFullYear() && m === now.getMonth();
       const past = y < now.getFullYear() || (y === now.getFullYear() && m < now.getMonth());
-      sinceStart += md.total;
       if (y === now.getFullYear()) { thisYear += md.total; expectedYear += md.full; }
       const col = document.createElement("div");
       col.className = "col" + (isCur ? " current" : "");
-      const h = Math.min(100, (md.total / nettoMaand) * 100);
+      const h = Math.min(100, (md.total / S.nettoMaand) * 100);
       const short = new Date(y, m, 1).toLocaleDateString("nl-NL", { month: "short" }).replace(".", "");
-      const val = past || isCur ? eur0.format(md.total) : "";
-      col.innerHTML = `<span class="val">${val}</span><div class="slot"><div class="ghost"></div><div class="fill" style="height:${h}%"></div></div><span class="lbl">${short}${m === 0 || i === 0 ? " " + String(y).slice(2) : ""}</span>`;
-      col.title = `${cap(monthName(y, m))} ${y}: ${eur.format(md.total)} van ${eur.format(md.full)}`;
+      const act = stroken[monthKey(y, m)] && stroken[monthKey(y, m)].netto;
+      const markH = act ? Math.min(104, act / S.nettoMaand * 100) : 0;
+      col.innerHTML = `<span class="val">${act ? eur0.format(act) : past || isCur ? eur0.format(md.total) : ""}</span><div class="slot"><div class="ghost"></div><div class="fill" style="height:${h}%"></div>${act ? `<div class="mark" style="bottom:calc(${markH}% - 1.5px)"></div>` : ""}</div><span class="lbl">${short}${m === 0 || i === 0 ? " " + String(y).slice(2) : ""}</span>`;
+      col.title = `${cap(monthName(y, m))} ${y}: ${eur.format(md.total)} van ${eur.format(md.full)}${act ? `, ontvangen ${eur.format(act)}` : ""}`;
       chart.appendChild(col);
       m++; if (m > 11) { m = 0; y++; }
     }
     const yr = now.getFullYear();
-    document.getElementById("t-total").textContent = eur.format(sinceStart);
-    document.getElementById("t-year-lbl").textContent = `Verdiend in ${yr}`;
-    document.getElementById("t-year").textContent = eur.format(thisYear);
-    document.getElementById("t-exp-lbl").textContent = `Verwacht in heel ${yr}`;
-    document.getElementById("t-exp").textContent = eur.format(expectedYear);
+    $("t-total").textContent = eur.format(earnedUntil(now)); // ook live bovenaan
+    $("t-year-lbl").textContent = `Verdiend in ${yr}`;
+    $("t-year").textContent = eur.format(thisYear);
+    $("t-exp-lbl").textContent = `Verwacht in heel ${yr}`;
+    $("t-exp").textContent = eur.format(expectedYear);
   }
 
-  // ---------- Render ----------
+  // ================= Loonstrook-check =================
+  function strookMonths(now) {
+    const out = []; let y = S.start.getFullYear(), m = S.start.getMonth();
+    while (y < now.getFullYear() || (y === now.getFullYear() && m <= now.getMonth())) { out.push([y, m]); m++; if (m > 11) { m = 0; y++; } }
+    return out.reverse();
+  }
+  function estimateFor(y, m) {
+    const days = weekdaysOfMonth(y, m), active = days.filter(d => d >= S.start).length;
+    return S.schattingMaand * active / days.length;
+  }
+  const parseEuro = v => { const t = String(v).trim().replace(/[€\s]/g, ""); if (!t) return null; const n = parseFloat(t.includes(",") ? t.replace(/\./g, "").replace(",", ".") : t); return isFinite(n) && n > 0 ? Math.round(n * 100) / 100 : null; };
+  function renderStroken() {
+    const body = $("strook-body"), now = new Date();
+    const ae = document.activeElement, keep = ae && body.contains(ae) ? [ae.dataset.key, ae.dataset.field] : null;
+    let filled = 0, sumDiff = 0;
+    body.innerHTML = strookMonths(now).map(([y, m]) => {
+      const k = monthKey(y, m), est = estimateFor(y, m), act = stroken[k] && stroken[k].netto;
+      let diff = "—";
+      if (act) { const d = act - est; filled++; sumDiff += d; diff = `<span class="${d >= 0 ? "diff-pos" : "diff-neg"}">${d >= 0 ? "+" : "−"} ${eur.format(Math.abs(d))}</span>`; }
+      return `<tr><td>${cap(monthName(y, m))} ${y}</td><td>${eur.format(est)}</td><td><input inputmode="decimal" data-key="${k}" data-field="netto" aria-label="Ontvangen netto ${monthName(y, m)} ${y}" placeholder="€ 0,00" value="${act ? act.toLocaleString("nl-NL", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ""}"></td><td><input type="date" data-key="${k}" data-field="datum" aria-label="Loon ontvangen op, ${monthName(y, m)} ${y}" value="${(stroken[k] && stroken[k].datum) || ""}"></td><td>${diff}</td></tr>`;
+    }).join("");
+    if (keep && keep[0]) { const el = body.querySelector(`input[data-key="${keep[0]}"][data-field="${keep[1]}"]`); if (el) el.focus(); }
+    $("strook-meta").textContent = filled
+      ? `Gemiddeld ${sumDiff / filled >= 0 ? "+" : "−"} ${eur.format(Math.abs(sumDiff / filled))} ten opzichte van de schatting`
+      : "Vul na elke storting in wat je echt netto hebt ontvangen";
+    $("f-usestrook").checked = !!settings.useStrook;
+    $("strook-hint").textContent = S.strookBasis
+      ? (settings.useStrook ? `De teller rekent nu met ${eur.format(S.strookBasis.netto)} per maand (loonstrook ${S.strookBasis.key}) in plaats van de schatting van ${eur.format(S.schattingMaand)}.` : `Gebruik ${eur.format(S.strookBasis.netto)} uit je loonstrook van ${S.strookBasis.key} in plaats van de schatting van ${eur.format(S.schattingMaand)}.`)
+      : "Zodra je een volledige maand hebt ingevuld, kan de teller met dat bedrag rekenen in plaats van met de schatting.";
+  }
+  function afterIncomeChange() {
+    applySettings();
+    const earned = earnedUntil(new Date());
+    S.milestones.forEach(m => { if (earned >= m.target) celebrated.add(m.id); });
+    persistSettings();
+    renderStroken(); refreshSlow(new Date(), true);
+  }
+  $("strook-body").addEventListener("change", e => {
+    const inp = e.target.closest("input[data-key]"); if (!inp) return;
+    const k = inp.dataset.key, entry = { ...(stroken[k] || {}) };
+    if (inp.dataset.field === "datum") { if (parseDate(inp.value)) entry.datum = inp.value; else delete entry.datum; }
+    else { const v = parseEuro(inp.value); if (v) { entry.netto = v; entry.ingevuld = keyOf(new Date()); } else delete entry.netto; }
+    if (!entry.netto && !entry.datum) delete stroken[k]; else stroken[k] = entry;
+    persistStroken();
+    setTimeout(afterIncomeChange, 0);
+  });
+  $("f-usestrook").addEventListener("change", e => { settings.useStrook = e.target.checked; afterIncomeChange(); });
+
+  // ================= Export =================
+  let exportMode = "year";
+  function buildExportOptions() {
+    const now = new Date(), ys = $("exp-year"), ms = $("exp-month");
+    const prevY = ys.value, prevM = ms.value;
+    ys.innerHTML = ""; ms.innerHTML = "";
+    for (let y = S.start.getFullYear(); y <= now.getFullYear() + 1; y++) ys.insertAdjacentHTML("beforeend", `<option value="${y}">${y}</option>`);
+    let y = S.start.getFullYear(), m = S.start.getMonth();
+    const endY = now.getFullYear() + 1, endM = now.getMonth();
+    while (y < endY || (y === endY && m <= endM)) {
+      ms.insertAdjacentHTML("beforeend", `<option value="${monthKey(y, m)}">${cap(monthName(y, m))} ${y}</option>`);
+      m++; if (m > 11) { m = 0; y++; }
+    }
+    ys.value = prevY && [...ys.options].some(o => o.value === prevY) ? prevY : String(now.getFullYear());
+    ms.value = prevM && [...ms.options].some(o => o.value === prevM) ? prevM : monthKey(now.getFullYear(), now.getMonth());
+  }
+  function setMode(mode) {
+    exportMode = mode;
+    $("exp-year-btn").setAttribute("aria-pressed", mode === "year");
+    $("exp-month-btn").setAttribute("aria-pressed", mode === "month");
+    $("exp-year-lbl").hidden = mode !== "year";
+    $("exp-month-lbl").hidden = mode !== "month";
+  }
+  $("exp-year-btn").addEventListener("click", () => setMode("year"));
+  $("exp-month-btn").addEventListener("click", () => setMode("month"));
+
+  const csvNum = n => (Math.round(n * 100) / 100).toFixed(2).replace(".", ",");
+  const csvCell = v => { const t = String(v); return /[;"\n]/.test(t) ? `"${t.replace(/"/g, '""')}"` : t; };
+  const toCsv = rows => rows.map(r => r.map(csvCell).join(";")).join("\r\n");
+
+  function yearCsv(year, now) {
+    const rows = [["Maand", "Werkdagen", "Feestdagen", "Verlofdagen", "Netto (teller)", "Opgebouwd tot nu", "Schatting loonheffing", "Ontvangen volgens loonstrook", "Verschil ontvangen vs. schatting", "Loon ontvangen op"]];
+    const tot = [0, 0, 0, 0, 0, 0, 0, 0];
+    for (let m = 0; m < 12; m++) {
+      const md = monthData(year, m, now);
+      const act = md.info.filter(x => x.active);
+      if (!act.length) continue;
+      const hol = act.filter(x => x.holiday).length, lv = act.filter(x => !x.holiday && x.leave).length, work = act.length - hol - lv;
+      const ont = stroken[monthKey(year, m)] && stroken[monthKey(year, m)].netto;
+      const est = estimateFor(year, m);
+      rows.push([`${cap(monthName(year, m))} ${year}`, work, hol, lv, csvNum(md.full), csvNum(md.total), csvNum(est), ont ? csvNum(ont) : "", ont ? csvNum(ont - est) : "", (stroken[monthKey(year, m)] && stroken[monthKey(year, m)].datum) || ""]);
+      tot[0] += work; tot[1] += hol; tot[2] += lv; tot[3] += md.full; tot[4] += md.total; tot[5] += est; if (ont) { tot[6] += ont; tot[7] += ont - est; }
+    }
+    rows.push(["Totaal", tot[0], tot[1], tot[2], csvNum(tot[3]), csvNum(tot[4]), csvNum(tot[5]), tot[6] ? csvNum(tot[6]) : "", tot[6] ? csvNum(tot[7]) : "", ""]);
+    return rows;
+  }
+  function monthCsv(y, m, now) {
+    const md = monthData(y, m, now);
+    const rows = [["Datum", "Weekdag", "Soort", "Netto per dag", "Opgebouwd", "Status"]];
+    let sum = 0;
+    md.info.forEach(x => {
+      const kind = !x.active ? "Voor startdatum" : x.holiday ? `Feestdag (${x.holiday})` : x.leave ? "Verlof" : "Werkdag";
+      const earned = x.active ? x.fraction * md.perDay : 0; sum += earned;
+      const status = !x.active ? "" : x.fraction >= 1 ? "Afgerond" : x.fraction > 0 ? "Bezig" : "Nog te gaan";
+      rows.push([keyOf(x.date), x.date.toLocaleDateString("nl-NL", { weekday: "long" }), kind, x.active ? csvNum(md.perDay) : "", csvNum(earned), status]);
+    });
+    const ont = stroken[monthKey(y, m)] && stroken[monthKey(y, m)].netto;
+    rows.push([], ["Totaal opgebouwd", "", "", csvNum(md.full), csvNum(sum), ""]);
+    if (ont) rows.push(["Ontvangen volgens loonstrook", "", "", "", csvNum(ont), ""]);
+    return rows;
+  }
+  let downloadsNs;
+  async function saveFile(filename, text) {
+    if (downloadsNs === undefined) {
+      downloadsNs = null;
+      try { if (window.claude && typeof window.claude.use === "function") downloadsNs = await window.claude.use("downloads"); } catch (e) { downloadsNs = null; }
+    }
+    const data = "\ufeff" + text;
+    if (downloadsNs) {
+      try { await downloadsNs.save({ filename, data }); return "ok"; }
+      catch (e) { return e && e.code === "declined" ? "declined" : e && e.code === "rate_limited" ? "busy" : "failed"; }
+    }
+    try {
+      const url = URL.createObjectURL(new Blob([data], { type: "text/csv;charset=utf-8" }));
+      const a = document.createElement("a"); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      return "ok";
+    } catch (e) { return "failed"; }
+  }
+  $("exp-go").addEventListener("click", async () => {
+    const now = new Date(), btn = $("exp-go"), st = $("exp-status");
+    let rows, name;
+    if (exportMode === "year") { const y = +$("exp-year").value; rows = yearCsv(y, now); name = `loonteller-jaar-${y}.csv`; }
+    else { const [y, mm] = $("exp-month").value.split("-").map(Number); rows = monthCsv(y, mm - 1, now); name = `loonteller-${y}-${pad(mm)}.csv`; }
+    btn.disabled = true; st.textContent = "Bestand klaarmaken…";
+    const r = await saveFile(name, toCsv(rows));
+    btn.disabled = false;
+    st.textContent = r === "ok" ? `${name} is klaar.` : r === "declined" ? "Download geannuleerd." : r === "busy" ? "Er staat al een download klaar, probeer het zo nog eens." : "Downloaden lukt hier niet.";
+  });
+
+  // ================= Berekening =================
+  function renderCalcTable() {
+    const j = S.jaar, tbl = $("calc");
+    const rows = [
+      ["Brutoloon per maand", eur.format(settings.bruto)],
+      [`Vakantiegeld per maand (${num(settings.vakantiegeld, 1)}%)`, eur.format(settings.bruto * settings.vakantiegeld / 100)],
+      ["Bruto per jaar, inclusief vakantiegeld", eur.format(j.brutoJaar)],
+    ];
+    if (j.pensioenJaar > 0) rows.push([`Pensioenpremie (${num(settings.pensioen, 1)}%)`, "− " + eur.format(j.pensioenJaar)]);
+    rows.push(["Belasting en premies volgens de schijven", "− " + eur.format(j.tax)],
+      ["Algemene heffingskorting", "+ " + eur.format(j.ahk)],
+      ["Arbeidskorting", "+ " + eur.format(j.ak)],
+      ["Netto per jaar", eur.format(j.netto)]);
+    tbl.innerHTML = rows.map(([a, b]) => `<tr><td>${a}</td><td>${b}</td></tr>`).join("") +
+      `<tr class="total"><td>Netto per maand</td><td>${eur.format(S.nettoMaand)}</td></tr>`;
+    $("calc-note").textContent = `Schatting op basis van de loonheffing 2026 (tarieven 35,75% en 37,56%, algemene heffingskorting en arbeidskorting), vakantiegeld maandelijks uitbetaald${j.pensioenJaar > 0 ? ", pensioenpremie vooraf van het belastbaar loon afgetrokken" : ", zonder pensioenpremie"}. Een werkdag loopt van ${fmtTime(S.startUur)} tot ${fmtTime(S.eindUur)}. Feestdagen en verlof worden doorbetaald, dus de teller loopt daar ook door.`;
+  }
+
+  // ================= Instellingen-dialoog =================
+  const dlg = $("settings");
+  const F = {
+    bruto: ["f-bruto", "n"], vakantiegeld: ["f-vg", "n"], pensioen: ["f-pensioen", "n"], start: ["f-start", "s"],
+    van: ["f-van", "s"], tot: ["f-tot", "s"], loonmodus: ["f-loonmodus", "s"], loondag: ["f-loondag", "n"],
+    wettelijk: ["f-wet", "n"], bovenwettelijk: ["f-bwet", "n"], urenPerDag: ["f-urendag", "n"],
+    saldoUren: ["f-saldo", "n"], saldoDatum: ["f-saldodatum", "s"],
+    eindNaam: ["f-eindnaam", "s"], eindDatum: ["f-einddatum", "s"],
+  };
+  function fillForm(src) { for (const k in F) $(F[k][0]).value = src[k]; syncLoondag(); }
+  function syncLoondag() { $("f-loondag").disabled = $("f-loonmodus").value !== "dag"; }
+  $("f-loonmodus").addEventListener("change", syncLoondag);
+  function openSettings() { fillForm(settings); if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", ""); }
+  function closeSettings() { if (dlg.close) dlg.close(); else dlg.removeAttribute("open"); }
+  $("settings-btn").addEventListener("click", openSettings);
+  $("set-close").addEventListener("click", closeSettings);
+  $("set-cancel").addEventListener("click", closeSettings);
+  $("set-reset").addEventListener("click", () => fillForm(DEFAULTS));
+  $("set-save").addEventListener("click", () => {
+    const next = { ...settings };
+    for (const k in F) {
+      const v = $(F[k][0]).value;
+      if (F[k][1] === "n") { const n = parseFloat(v); next[k] = isFinite(n) ? n : DEFAULTS[k]; }
+      else next[k] = v;
+    }
+    if (!parseDate(next.start)) next.start = DEFAULTS.start;
+    if (!(parseTime(next.tot) > parseTime(next.van))) { next.van = DEFAULTS.van; next.tot = DEFAULTS.tot; }
+    const startChanged = next.start !== settings.start;
+    settings = next;
+    applySettings();
+    // Mijlpalen die door nieuwe instellingen al gehaald zijn, niet opnieuw vieren
+    const earned = earnedUntil(new Date());
+    S.milestones.forEach(m => { if (earned >= m.target) celebrated.add(m.id); });
+    persistSettings();
+    if (startChanged) { const n = new Date(); viewY = n.getFullYear(); viewM = n.getMonth(); }
+    buildCalendar(); renderStroken(); buildExportOptions(); refreshSlow(new Date(), true);
+    closeSettings();
+  });
+
+  // ================= Vandaag: ring + eindtijd =================
+  const RING_C = 2 * Math.PI * 50;
+  $("ring-arc").setAttribute("stroke-dasharray", RING_C);
+  let ringKey = "";
+  function buildTodayScale(end) {
+    const key = S.startUur + "-" + end;
+    if (ringKey === key) return; ringKey = key;
+    const scale = $("tb-scale"); scale.innerHTML = "";
+    const span = end - S.startUur;
+    for (let i = 0; i <= 3; i++) scale.insertAdjacentHTML("beforeend", `<span>${fmtTime(S.startUur + span * i / 3)}</span>`);
+    const g = $("ring-ticks"); g.innerHTML = "";
+    for (let h = Math.ceil(S.startUur + 1e-9); h < end; h++) {
+      if (h <= S.startUur) continue;
+      const a = ((h - S.startUur) / span) * 2 * Math.PI - Math.PI / 2;
+      g.insertAdjacentHTML("beforeend", `<line class="ring-tick" x1="${60 + 45 * Math.cos(a)}" y1="${60 + 45 * Math.sin(a)}" x2="${60 + 55 * Math.cos(a)}" y2="${60 + 55 * Math.sin(a)}"/>`);
+    }
+  }
+  function renderTodayRing(now, todayInfo, tf, workToday, todayEnd) {
+    buildTodayScale(todayEnd);
+    const main = $("ring-main"), sub = $("ring-sub");
+    if (!todayInfo || !todayInfo.active) { main.textContent = "vrij"; sub.textContent = "geen werkdag"; }
+    else if (!workToday) { main.textContent = "vrij"; sub.textContent = (todayInfo.holiday || "verlof").toLowerCase(); }
+    else if (tf <= 0) { main.textContent = fmtTime(S.startUur); sub.textContent = "start"; }
+    else if (tf >= 1) { main.textContent = "klaar"; sub.textContent = "dag zit erop"; }
+    else {
+      const ms = at(now, todayEnd) - now;
+      const h = Math.floor(ms / 3600000), mi = Math.floor((ms % 3600000) / 60000);
+      main.textContent = h > 0 ? `${h}u ${pad(mi)}m` : `${mi}m ${pad(Math.floor((ms % 60000) / 1000))}s`;
+      sub.textContent = `nog tot ${fmtTime(todayEnd)}`;
+    }
+    // eindtijd vandaag
+    const row = $("tb-end"), inp = $("f-eindvandaag"), reset = $("tb-end-reset");
+    row.hidden = !(todayInfo && todayInfo.active && workToday);
+    if (row.hidden) return;
+    if (document.activeElement !== inp) inp.value = fmtTime(todayEnd);
+    const custom = todayEnd !== S.eindUur;
+    reset.hidden = !custom;
+    reset.textContent = `Normaal (${fmtTime(S.eindUur)})`;
+    $("tb-end-note").textContent = custom ? `Je dagloon blijft ${eur.format(todayInfo ? monthData(now.getFullYear(), now.getMonth(), now).perDay : 0)}, het loopt vandaag alleen sneller op.` : "";
+  }
+  function setTodayEnd(v) {
+    const n = new Date(), k = keyOf(n), o = { ...(settings.eindOverrides || {}) };
+    const h = v ? parseTime(v) : S.eindUur;
+    if (!v || Math.abs(h - S.eindUur) < 1e-6) delete o[k];
+    else if (h <= S.startUur) { $("tb-end-note").textContent = `Kies een tijd na ${fmtTime(S.startUur)}.`; $("f-eindvandaag").value = fmtTime(eindVoor(n)); return; }
+    else o[k] = v;
+    const cutoff = keyOf(addDays(n, -60));
+    Object.keys(o).forEach(x => { if (x < cutoff) delete o[x]; });
+    settings.eindOverrides = o;
+    afterIncomeChange();
+  }
+  $("f-eindvandaag").addEventListener("change", e => setTodayEnd(e.target.value));
+  $("tb-end-reset").addEventListener("click", () => setTodayEnd(""));
+
+  // ================= Render =================
   let lastSecond = -1, lastHistory = 0;
   function refreshSlow(now, force) {
-    const y = now.getFullYear(), m = now.getMonth();
-    const md = monthData(y, m, now);
-    renderPayday(now); renderWeekend(now);
+    const y = now.getFullYear(), m = now.getMonth(), md = monthData(y, m, now);
+    renderPayday(now); renderWeekend(now); renderEindCountdown(now);
     const todayInfo = md.info.find(x => sameDay(x.date, now));
     const tf = todayInfo && todayInfo.active ? todayInfo.fraction : 0;
     const workToday = isWorking(midnight(now));
     const remaining = md.info.filter(x => x.active && isWorking(x.date) && x.fraction < 1 && !(sameDay(x.date, now) && tf > 0)).length;
 
+    const todayEnd = eindVoor(now), todayUren = todayEnd - S.startUur;
     let sub, subTxt = "vrij";
     if (todayInfo && todayInfo.active && workToday) {
-      if (tf <= 0) { subTxt = CONFIG.startUur + ":00"; sub = `Je dag begint om ${CONFIG.startUur}:00. Vandaag komt er <strong>${eur.format(md.perDay)}</strong> bij.`; }
+      if (tf <= 0) { subTxt = fmtTime(S.startUur); sub = `Je dag begint om ${fmtTime(S.startUur)}. Vandaag komt er <strong>${eur.format(md.perDay)}</strong> bij.`; }
       else if (tf < 1) {
-        const ms = (1 - tf) * uren * 3600000;
+        const ms = (1 - tf) * todayUren * 3600000;
         subTxt = pctFmt.format(tf);
-        sub = `Nog <strong>${Math.floor(ms / 3600000)}u ${Math.floor((ms % 3600000) / 60000)}m</strong> tot ${CONFIG.eindUur}:00. Elke seconde komt er € ${(md.perDay / (uren * 3600)).toLocaleString("nl-NL", { minimumFractionDigits: 4, maximumFractionDigits: 4 })} bij.`;
+        sub = `Nog <strong>${Math.floor(ms / 3600000)}u ${Math.floor((ms % 3600000) / 60000)}m</strong> tot ${fmtTime(todayEnd)}. Elke seconde komt er € ${(md.perDay / (todayUren * 3600)).toLocaleString("nl-NL", { minimumFractionDigits: 4, maximumFractionDigits: 4 })} bij.`;
       } else { subTxt = "klaar"; sub = `Werkdag zit erop. <strong>${eur.format(md.perDay)}</strong> erbij vandaag.`; }
     } else if (todayInfo && todayInfo.active) {
-      const why = todayInfo.holiday || "verlof";
       subTxt = tf > 0 ? pctFmt.format(tf) : "vrij";
-      sub = `Vandaag is het ${why.toLowerCase()}, en je wordt gewoon doorbetaald: <strong>${eur.format(md.perDay)}</strong>.`;
+      sub = `Vandaag is het ${(todayInfo.holiday || "verlof").toLowerCase()}, en je wordt gewoon doorbetaald: <strong>${eur.format(md.perDay)}</strong>.`;
+    } else if (midnight(now) < S.start) {
+      sub = `Je begint op ${longDay(S.start)}.`;
     } else {
-      sub = `Weekend. De teller staat stil en loopt maandag om ${CONFIG.startUur}:00 weer.`;
+      sub = `Weekend. De teller staat stil en loopt maandag om ${fmtTime(S.startUur)} weer.`;
     }
     sub += ` Nog ${remaining} ${remaining === 1 ? "werkdag" : "werkdagen"} te gaan deze maand.`;
-    document.getElementById("sub").innerHTML = sub;
-    document.getElementById("sub-txt").textContent = subTxt;
-    document.getElementById("bar-right").textContent = eur.format(nettoMaand) + " deze maand";
-    document.getElementById("s-today").textContent = eur.format(tf * md.perDay);
-    document.getElementById("s-day").textContent = eur.format(md.perDay);
-    document.getElementById("s-hour").textContent = eur.format(md.perDay / uren);
-    document.getElementById("s-left").textContent = eur.format(Math.max(0, md.full - md.total));
+    $("sub").innerHTML = sub;
+    $("sub-txt").textContent = subTxt;
+    $("bar-right").textContent = eur.format(md.full || S.nettoMaand) + " deze maand";
+    $("s-day").textContent = eur.format(md.perDay);
+    $("s-hour").textContent = eur.format(md.perDay / S.uren);
+    $("s-left").textContent = eur.format(Math.max(0, md.full - md.total));
+
+    const mon = addDays(midnight(now), -((now.getDay() + 6) % 7));
+    let week = 0;
+    for (let i = 0; i < 5; i++) {
+      const d = addDays(mon, i); if (d < S.start) continue;
+      week += dayFraction(d, now) * (S.nettoMaand / weekdaysOfMonth(d.getFullYear(), d.getMonth()).length);
+    }
+    $("s-week").textContent = eur.format(week);
+    $("tb-rate").textContent = `€ ${(md.perDay / (todayUren * 60)).toLocaleString("nl-NL", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} per minuut`;
+    $("tb-label").textContent = !todayInfo || !todayInfo.active ? "Vandaag geen werkdag"
+      : !workToday ? `Vandaag verdiend (${(todayInfo.holiday || "verlof").toLowerCase()}, doorbetaald)`
+      : tf <= 0 ? `Vandaag verdiend, start om ${fmtTime(S.startUur)}` : tf >= 1 ? "Vandaag verdiend, dag zit erop" : "Vandaag verdiend";
+
+    renderTodayRing(now, todayInfo, tf, workToday, todayEnd);
+    renderHours(now);
+    const titleTotal = monthData(now.getFullYear(), now.getMonth(), now).total;
+    document.title = `${eur.format(titleTotal)} · Loonteller`;
+    $("at-label").textContent = `Totaal sinds ${S.start.toLocaleDateString("nl-NL", { day: "numeric", month: "long" })}`;
+    const eind = parseDate(settings.eindDatum);
+    if (eind && eind >= midnight(now)) {
+      const endTotal = earnedUntil(at(eind, 24)), soFar = earnedUntil(now);
+      $("at-sub").textContent = `${pctFmt.format(endTotal ? soFar / endTotal : 0)} van ongeveer ${eur.format(endTotal)} tot ${settings.eindNaam || "de einddatum"} (${dayFmt(eind)})`;
+    } else {
+      const ws = Math.max(1, Math.round((midnight(now) - S.start) / 604800000));
+      $("at-sub").textContent = `Gemiddeld ${eur.format(earnedUntil(now) / ws)} per week`;
+    }
     updateCalendar(now);
-    if (force || now - lastHistory > 10000) { renderHistory(now); lastHistory = now.getTime(); }
+    renderMilestones(now);
+    if (force || now - lastHistory > 10000) { renderHistory(now); renderVacation(now); lastHistory = now.getTime(); }
   }
 
   function render() {
-    const now = new Date();
-    const y = now.getFullYear(), m = now.getMonth();
+    const now = new Date(), y = now.getFullYear(), m = now.getMonth();
     const md = monthData(y, m, now);
     buildDial(y, m, md);
     const total = md.total, whole = Math.floor(total), rest = total - whole;
     const cents = Math.floor(rest * 100), tick = Math.floor((rest * 100 - cents) * 100);
-    document.getElementById("c-int").textContent = whole.toLocaleString("nl-NL");
-    document.getElementById("c-cent").textContent = pad(cents);
-    document.getElementById("c-tick").textContent = pad(tick);
-    const p = Math.min(1, total / nettoMaand);
+    $("c-int").textContent = whole.toLocaleString("nl-NL");
+    $("c-cent").textContent = pad(cents);
+    $("c-tick").textContent = pad(tick);
+    const all = earnedUntil(now), aw = Math.floor(all), ar = all - aw, ac = Math.floor(ar * 100);
+    $("at-int").textContent = aw.toLocaleString("nl-NL");
+    $("at-cent").textContent = pad(ac);
+    $("at-tick").textContent = pad(Math.floor((ar * 100 - ac) * 100));
+    const p = Math.min(1, total / S.nettoMaand);
     arc.setAttribute("stroke-dashoffset", C * (1 - p));
-    document.getElementById("hand").setAttribute("transform", `rotate(${p * 360} 160 160)`);
-    document.getElementById("dial-pct").textContent = pctFmt.format(p);
-    document.getElementById("bar-fill").style.width = (p * 100) + "%";
-    document.getElementById("bar").setAttribute("aria-valuenow", Math.round(p * 100));
+    $("hand").setAttribute("transform", `rotate(${p * 360} 160 160)`);
+    $("dial-pct").textContent = pctFmt.format(p);
+    $("bar-fill").style.width = (p * 100) + "%";
+    $("bar").setAttribute("aria-valuenow", Math.round(p * 100));
     const ti = md.info.find(x => sameDay(x.date, now));
-    subArc.setAttribute("stroke-dashoffset", CS * (1 - (ti && ti.active ? ti.fraction : 0)));
+    const tfr = ti && ti.active ? ti.fraction : 0;
+    subArc.setAttribute("stroke-dashoffset", CS * (1 - tfr));
+    $("tb-amount").innerHTML = `${eur.format(tfr * md.perDay)}<small>van ${eur.format(ti && ti.active ? md.perDay : 0)}</small>`;
+    $("tb-fill").style.width = (tfr * 100) + "%";
+    $("ring-arc").setAttribute("stroke-dashoffset", RING_C * (1 - tfr));
+    const mark = $("tb-now");
+    if (ti && ti.active && tfr > 0 && tfr < 1) { mark.style.display = "block"; mark.style.left = (tfr * 100) + "%"; } else mark.style.display = "none";
     const sec = Math.floor(now.getTime() / 1000);
     if (sec !== lastSecond) { lastSecond = sec; refreshSlow(now, false); }
     requestAnimationFrame(render);
   }
 
-  // ---------- Berekening tabel ----------
-  const rows = [
-    ["Brutoloon per maand", eur.format(CONFIG.brutoPerMaand)],
-    ["Vakantiegeld per maand (8%)", eur.format(CONFIG.brutoPerMaand * CONFIG.vakantiegeldPct)],
-    ["Bruto per jaar, inclusief vakantiegeld", eur.format(jaar.bruto)],
-    ["Belasting en premies volgens de schijven", "− " + eur.format(jaar.tax)],
-    ["Algemene heffingskorting", "+ " + eur.format(jaar.ahk)],
-    ["Arbeidskorting", "+ " + eur.format(jaar.ak)],
-    ["Netto per jaar", eur.format(jaar.netto)],
-  ];
-  const tbl = document.getElementById("calc");
-  rows.forEach(([a, b]) => tbl.insertAdjacentHTML("beforeend", `<tr><td>${a}</td><td>${b}</td></tr>`));
-  tbl.insertAdjacentHTML("beforeend", `<tr class="total"><td>Netto per maand</td><td>${eur.format(nettoMaand)}</td></tr>`);
-
-  // ---------- Thema ----------
+  // ================= Thema =================
   try { const t = localStorage.getItem("loonteller-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
-  document.getElementById("theme-btn").addEventListener("click", () => {
+  $("theme-btn").addEventListener("click", () => {
     const cur = document.documentElement.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
     const next = cur === "dark" ? "light" : "dark";
     document.documentElement.dataset.theme = next;
     try { localStorage.setItem("loonteller-theme", next); } catch (e) {}
   });
 
+  applySettings();
   buildCalendar();
+  renderStroken();
+  buildExportOptions();
   requestAnimationFrame(render);
   connectDb();
 })();
 </script>
 </body>
 </html>
+
+</body></html>

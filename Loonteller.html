@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -38,11 +38,11 @@
     font-size: 17px; line-height: 1.5; font-variant-numeric: tabular-nums;
     -webkit-font-smoothing: antialiased;
   }
-  main { max-width: 1080px; margin: 0 auto; padding: clamp(24px, 5vw, 56px) clamp(18px, 4vw, 40px) 64px; }
+  main { max-width: 1180px; margin: 0 auto; padding: clamp(24px, 5vw, 56px) clamp(18px, 4vw, 40px) 64px; }
   button { font: inherit; color: inherit; }
 
   /* Top cards */
-  .top { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 12px; margin-bottom: clamp(28px, 5vw, 48px); }
+  .top { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; margin-bottom: clamp(28px, 5vw, 48px); }
   .card {
     display: flex; align-items: center; gap: 14px; padding: 14px 18px;
     background: var(--dial); color: #E9ECF1; border-radius: 14px;
@@ -50,8 +50,15 @@
     min-width: 0; text-align: left;
   }
   button.card { cursor: pointer; }
-  .cd-card { flex-wrap: wrap; gap: 6px 16px; }
-  .cd-card .card-txt { flex-basis: 100%; order: -1; }
+  .card { flex-wrap: wrap; align-items: flex-end; align-content: space-between; gap: 8px 16px; }
+  .card .card-txt { flex-basis: 100%; order: -1; }
+  .card-txt strong::first-letter { text-transform: uppercase; }
+  .card-num { text-align: left; }
+  .top .card:not(.cd-card) .card-num { min-width: 0; }
+  .top > .card { grid-column: span 2; }
+  .top > .cd-card { grid-column: span 3; }
+  @media (max-width: 1000px) { .top { grid-template-columns: repeat(2, minmax(0, 1fr)); } .top > .card, .top > .cd-card { grid-column: auto; } .top > #ofc-card { grid-column: 1 / -1; } }
+  @media (max-width: 560px) { .top { grid-template-columns: 1fr; } .top > #ofc-card { grid-column: auto; } }
   .cd-pair { display: flex; align-items: baseline; gap: 6px; }
   .cd-pair .card-num { min-width: 0; }
   .cd-pair small { font-size: .86rem; color: #AEB7C6; }
@@ -106,6 +113,15 @@
   .pd-btn { margin-left: auto; flex: none; background: transparent; color: #E9ECF1; border: 1px solid var(--brass); border-radius: 999px; padding: 6px 12px; cursor: pointer; font-size: .88rem; white-space: nowrap; }
   .pd-btn:hover { background: color-mix(in srgb, var(--brass) 25%, transparent); }
   .day.sel { box-shadow: inset 0 0 0 2px var(--brass); }
+  .spr { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 999px; background: var(--brass); color: var(--dial); font-size: .68rem; font-weight: 600; letter-spacing: .01em; vertical-align: 2px; white-space: nowrap; }
+  .day.weekend .spr { opacity: .8; }
+  .lg-spr { display: inline-block; padding: 0 6px; border-radius: 999px; background: var(--brass); color: var(--dial); font-size: .7rem; font-weight: 600; margin-right: 6px; }
+  .day .loc { position: absolute; right: 8px; bottom: 7px; font-size: .95rem; line-height: 1; }
+  .day.done .loc, .day.today .loc { filter: none; }
+  .day.loc-empty .loc { opacity: .35; font-size: .8rem; }
+  .ofc-week { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 2px; }
+  .ofc-week label { flex-direction: row; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--ink); cursor: pointer; font-size: .9rem; }
+  .ofc-week input { width: 16px; height: 16px; padding: 0; accent-color: var(--brass); }
   .day.sel::after { content: "+"; position: absolute; top: 6px; right: 8px; width: 20px; height: 20px; border-radius: 50%; background: var(--brass); color: var(--dial); display: grid; place-items: center; font-size: .85rem; font-weight: 600; line-height: 1; }
   .cal-tools { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; margin-bottom: 12px; font-size: .9rem; color: var(--muted); }
   .sel-box { margin-top: 14px; padding: 16px 18px; background: var(--surface); border: 1px solid var(--brass); border-radius: 14px; display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; }
@@ -303,7 +319,7 @@
     .fields { grid-template-columns: 1fr; }
   }
   @media (prefers-reduced-motion: reduce) { summary::before, .toast { transition: none; } }
-  @media (max-width: 560px) { .weekdays, .days { gap: 4px; } .weekdays span { padding-left: 2px; font-size: .78rem; } .day { min-height: 54px; padding: 6px 5px; border-radius: 8px; } .day .n { font-size: .9rem; } .day .amt { font-size: .6rem; white-space: nowrap; } .day.weekend .amt { display: none; } .day.sel::after { width: 14px; height: 14px; top: 3px; right: 3px; font-size: .7rem; } }
+  @media (max-width: 560px) { .weekdays, .days { gap: 4px; } .weekdays span { padding-left: 2px; font-size: .78rem; } .day { min-height: 54px; padding: 6px 5px; border-radius: 8px; } .day .n { font-size: .9rem; } .day .amt { font-size: .6rem; white-space: nowrap; } .day.weekend .amt { display: none; } .spr { margin-left: 2px; padding: 0 4px; font-size: .55rem; vertical-align: 1px; } .day .loc { right: 4px; bottom: 4px; font-size: .72rem; } .day.sel::after { width: 14px; height: 14px; top: 3px; right: 3px; font-size: .7rem; } }
 </style>
 </head>
 <body>
@@ -318,10 +334,20 @@
       <span class="card-num small" id="wk-num">–</span>
       <span class="card-txt"><strong id="wk-title">tot het weekend</strong><span id="wk-sub"></span></span>
     </div>
+    <button type="button" class="card" id="ofc-card" aria-label="Kantoordagen, klik om ze in de kalender aan te passen">
+      <span class="card-txt"><strong id="ofc-title">Nog naar kantoor</strong><span id="ofc-sub"></span></span>
+      <span class="cd-pair"><span class="card-num" id="ofc-days">–</span><small id="ofc-days-lbl">kantoordagen</small></span>
+      <span class="cd-pair"><span class="card-num" id="ofc-trips">–</span><small id="ofc-trips-lbl">× fietsen</small></span>
+    </button>
     <button type="button" class="card cd-card" id="cd-card" aria-label="Aftelklok, klik om aan te passen">
       <span class="card-txt"><strong id="cd-title">Tot uit dienst</strong><span id="cd-sub"></span></span>
       <span class="cd-pair"><span class="card-num" id="cd-days">–</span><small id="cd-days-lbl">dagen</small></span>
       <span class="cd-pair"><span class="card-num" id="cd-work">–</span><small id="cd-work-lbl">werkdagen</small></span>
+    </button>
+    <button type="button" class="card cd-card" id="cd2-card" aria-label="Tweede aftelklok, klik om aan te passen">
+      <span class="card-txt"><strong id="cd2-title">Tot 5 december</strong><span id="cd2-sub"></span></span>
+      <span class="cd-pair"><span class="card-num" id="cd2-days">–</span><small id="cd2-days-lbl">dagen</small></span>
+      <span class="cd-pair"><span class="card-num" id="cd2-work">–</span><small id="cd2-work-lbl">werkdagen</small></span>
     </button>
   </div>
 
@@ -424,6 +450,7 @@
       <span>Klikken in de kalender:</span>
       <div class="seg" role="group" aria-label="Wat een klik op een dag doet">
         <button type="button" id="mode-verlof" aria-pressed="true">Verlof</button>
+        <button type="button" id="mode-loc" aria-pressed="false">Kantoor/thuis</button>
         <button type="button" id="mode-sum" aria-pressed="false">Optellen</button>
       </div>
     </div>
@@ -433,6 +460,9 @@
       <span><i class="lg-done"></i>Gewerkt</span>
       <span><i class="lg-holiday"></i>Feestdag</span>
       <span><i class="lg-leave"></i>Verlof</span>
+      <span>🏢 Kantoor</span>
+      <span>🏠 Thuis</span>
+      <span><b class="lg-spr">▶</b><span id="spr-legend">Sprintstart</span></span>
       <span id="cal-hint">Klik op een werkdag om verlof aan of uit te zetten.</span>
     </div>
     <div class="sel-box" id="sel-box" hidden aria-live="polite">
@@ -544,12 +574,38 @@
       <p class="hint">Valt een vaste loondag in het weekend, dan gaat de teller uit van de vrijdag ervoor.</p>
     </fieldset>
     <fieldset>
+      <legend>Kantoor en thuiswerken</legend>
+      <div class="ofc-week" id="f-kantoor" role="group" aria-label="Vaste kantoordagen">
+        <label><input type="checkbox" value="1">ma</label>
+        <label><input type="checkbox" value="2">di</label>
+        <label><input type="checkbox" value="3">wo</label>
+        <label><input type="checkbox" value="4">do</label>
+        <label><input type="checkbox" value="5">vr</label>
+      </div>
+      <div class="fields" style="margin-top:12px">
+        <label>Ritten per kantoordag<input type="number" id="f-ritten" min="0" step="1"></label>
+        <label>Vervoer (in de tekst)<input type="text" id="f-vervoer" maxlength="20" placeholder="fietsen"></label>
+      </div>
+      <p class="hint">Vink je vaste kantoordagen aan; de andere werkdagen tellen dan als thuiswerken. In de kalender (stand Kantoor/thuis) pas je losse dagen aan.</p>
+    </fieldset>
+    <fieldset>
+      <legend>Sprints</legend>
+      <div class="fields">
+        <label>Startdatum van een sprint<input type="date" id="f-sprintdatum"></label>
+        <label>Nummer van die sprint<input type="number" id="f-sprintnr" min="0" step="1"></label>
+        <label>Sprintlengte (weken)<input type="number" id="f-sprintweken" min="1" step="1"></label>
+      </div>
+      <p class="hint">Vanaf deze datum rekent de kalender alle sprintstarts vooruit en terug. Laat de datum leeg om ze te verbergen.</p>
+    </fieldset>
+    <fieldset>
       <legend>Aftelklok bovenaan</legend>
       <div class="fields">
         <label>Naam<input type="text" id="f-eindnaam" maxlength="40" placeholder="uit dienst"></label>
         <label>Datum<input type="date" id="f-einddatum"></label>
+        <label>Tweede aftelklok, naam<input type="text" id="f-aftel2naam" maxlength="40" placeholder="5 december"></label>
+        <label>Tweede aftelklok, datum<input type="date" id="f-aftel2datum"></label>
       </div>
-      <p class="hint">Telt de dagen en jouw werkdagen tot en met deze datum. Verlof en feestdagen tellen niet als werkdag. Laat de datum leeg om de kaart te verbergen.</p>
+      <p class="hint">Telt de dagen en jouw werkdagen tot en met deze datum. Verlof en feestdagen tellen niet als werkdag. Laat een datum leeg om die kaart te verbergen. De eerste aftelklok bepaalt ook het einddoel bij je totaal en gewerkte uren.</p>
     </fieldset>
     <fieldset>
       <legend>Vakantiedagen</legend>
@@ -589,6 +645,9 @@
     wettelijk: 20, bovenwettelijk: 5, urenPerDag: 8, saldoUren: 40, saldoDatum: "2026-10-04",
     useStrook: false, eindOverrides: {},
     eindNaam: "uit dienst", eindDatum: "2026-12-31",
+    aftel2Naam: "5 december", aftel2Datum: "2026-12-05",
+    kantoorDagen: [], locaties: {}, ritten: 2, vervoer: "fietsen",
+    sprintDatum: "2026-10-05", sprintNr: 86, sprintWeken: 2,
   };
   let settings = { ...DEFAULTS };
   let celebrated = new Set();
@@ -632,6 +691,8 @@
     return { brutoJaar, pensioenJaar, tax, ahk, ak, netto: brutoJaar - pensioenJaar - (tax - kortingen) };
   }
   function applySettings() {
+    // eenmalige correctie: oude standaardwaarde (do 5 nov) → ma 5 okt
+    if (settings.sprintDatum === "2026-11-05" && settings.sprintNr === 86) settings.sprintDatum = "2026-10-05";
     S.start = midnight(parseDate(settings.start) || parseDate(DEFAULTS.start));
     S.startUur = parseTime(settings.van);
     S.eindUur = parseTime(settings.tot);
@@ -917,11 +978,11 @@
   }
 
   // ================= Aftelklok =================
-  function renderEindCountdown(now) {
-    const card = $("cd-card"), d = parseDate(settings.eindDatum);
+  function renderCountdownCard(prefix, dateStr, rawName, fallbackName, now) {
+    const card = $(prefix + "-card"), d = parseDate(dateStr);
     card.hidden = !d;
     if (!d) return;
-    const name = (settings.eindNaam || "").trim() || "uit dienst";
+    const name = (rawName || "").trim() || fallbackName;
     const end = midnight(d), today = midnight(now);
     const days = Math.round((end - today) / 86400000);
     let work = 0, lastWork = null;
@@ -931,15 +992,115 @@
       if (sameDay(x, today) && now >= at(x, eindVoor(x))) continue;
       work++;
     }
-    $("cd-title").textContent = days >= 0 ? `Tot ${name}` : `${cap(name)} is voorbij`;
-    $("cd-days").textContent = Math.max(0, days);
-    $("cd-days-lbl").textContent = days === 1 ? "dag" : "dagen";
-    $("cd-work").textContent = work;
-    $("cd-work-lbl").textContent = work === 1 ? "werkdag" : "werkdagen";
+    $(prefix + "-title").textContent = days > 0 ? `Tot ${name}` : days === 0 ? `Vandaag: ${name}` : `${cap(name)} is voorbij`;
+    $(prefix + "-days").textContent = Math.max(0, days);
+    $(prefix + "-days-lbl").textContent = days === 1 ? "dag" : "dagen";
+    $(prefix + "-work").textContent = work;
+    $(prefix + "-work-lbl").textContent = work === 1 ? "werkdag" : "werkdagen";
     let sub = dayFmt(d);
-    if (lastWork && days >= 0) sub += ` · laatste werkdag ${dayFmt(lastWork)}`;
-    $("cd-sub").textContent = sub;
+    if (lastWork && days >= 0 && !sameDay(lastWork, d)) sub += ` · laatste werkdag ${dayFmt(lastWork)}`;
+    $(prefix + "-sub").textContent = sub;
   }
+  // ================= Kantoor / thuis =================
+  // "k" = kantoor, "t" = thuis, null = nog niet bekend
+  function locatieVan(d) {
+    const o = settings.locaties && settings.locaties[keyOf(d)];
+    if (o === "k" || o === "t") return o;
+    if (o === "x") return null;
+    const pat = settings.kantoorDagen || [];
+    if (pat.length) return pat.includes(d.getDay()) ? "k" : "t";
+    return null;
+  }
+  function cycleLocatie(d) {
+    const k = keyOf(d), cur = locatieVan(d), o = { ...(settings.locaties || {}) };
+    const pat = settings.kantoorDagen || [];
+    // met vast patroon: wisselen tussen kantoor en thuis; zonder: kantoor → thuis → leeg
+    const next = pat.length ? (cur === "k" ? "t" : "k") : (cur === "k" ? "t" : cur === "t" ? null : "k");
+    const patDefault = pat.length ? (pat.includes(d.getDay()) ? "k" : "t") : null;
+    if (next === patDefault) delete o[k]; else o[k] = next === null ? "x" : next;
+    settings.locaties = o;
+    persistSettings();
+    refreshSlow(new Date(), true);
+  }
+  function tripsLeftToday(d, now) {
+    // ritten die vandaag nog komen: voor start alle, tijdens het werk alleen de terugweg
+    const r = Math.max(0, settings.ritten | 0);
+    if (now < at(d, S.startUur)) return r;
+    if (now < at(d, eindVoor(d))) return Math.ceil(r / 2);
+    return 0;
+  }
+  function renderOffice(now) {
+    const eind = parseDate(settings.eindDatum), today = midnight(now);
+    const until = eind && eind >= today ? midnight(eind) : null;
+    const r = Math.max(0, settings.ritten | 0), verb = (settings.vervoer || "").trim() || "fietsen";
+    let kLeft = 0, tLeft = 0, unk = 0, trips = 0, kDone = 0, tripsDone = 0;
+    for (let d = new Date(S.start); d <= (until || addDays(today, 0)); d = addDays(d, 1)) {
+      if (!isWorking(d)) continue;
+      const loc = locatieVan(d);
+      const isPast = d < today || (sameDay(d, today) && now >= at(d, eindVoor(d)));
+      if (isPast) { if (loc === "k") { kDone++; tripsDone += r; } continue; }
+      if (sameDay(d, today) && loc === "k") { trips += tripsLeftToday(d, now); tripsDone += r - tripsLeftToday(d, now); kLeft++; continue; }
+      if (loc === "k") { kLeft++; trips += r; } else if (loc === "t") tLeft++; else unk++;
+    }
+    const name = settings.eindNaam || "de einddatum";
+    $("ofc-title").textContent = until ? "Nog naar kantoor" : "Naar kantoor";
+    $("ofc-days").textContent = kLeft;
+    $("ofc-days-lbl").textContent = kLeft === 1 ? "kantoordag" : "kantoordagen";
+    $("ofc-trips").textContent = trips;
+    $("ofc-trips-lbl").textContent = `× ${verb}`;
+    const bits = [];
+    if (until) bits.push(`tot ${name}`);
+    bits.push(`${tLeft} thuis`);
+    if (unk) bits.push(`${unk} nog open`);
+    if (kDone) bits.push(`al ${tripsDone}× ${verb}`);
+    $("ofc-sub").textContent = (!kLeft && !tLeft && !kDone) ? "Kies je kantoordagen in de kalender of instellingen" : bits.join(" · ");
+  }
+  $("ofc-card").addEventListener("click", () => {
+    setCalMode("locatie");
+    $("month-title").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+  });
+
+  // Korte zin over kantoor/thuis voor de rest van deze week (of komende week in het weekend)
+  function weekPlan(now) {
+    const today = midnight(now), dow = today.getDay();
+    const fridayDone = dow === 5 && now >= at(today, eindVoor(today));
+    const nextWeek = dow === 0 || dow === 6 || fridayDone;
+    const from = nextWeek ? addDays(today, ((8 - dow) % 7) || 7) : today;
+    const mon = addDays(from, -((from.getDay() + 6) % 7));
+    const r = Math.max(0, settings.ritten | 0), verb = (settings.vervoer || "").trim() || "fietsen";
+    let k = 0, t = 0, open = 0, vrij = 0, trips = 0;
+    for (let i = 0; i < 5; i++) {
+      const d = addDays(mon, i);
+      if (d < from || d < S.start) continue;
+      if (sameDay(d, today) && now >= at(d, eindVoor(d))) continue;
+      if (!isWorking(d)) { if (isWeekday(d)) vrij++; continue; }
+      const loc = locatieVan(d);
+      if (loc === "k") { k++; trips += sameDay(d, today) ? tripsLeftToday(d, now) : r; }
+      else if (loc === "t") t++;
+      else open++;
+    }
+    if (!k && !t) return "";
+    if (!nextWeek && k + t + open + vrij === 1 && isWorking(today) && now < at(today, eindVoor(today))) {
+      return k ? ` Vandaag zit je <strong>op kantoor</strong>${trips ? ` (nog ${trips}× ${verb})` : ""}, de laatste werkdag van de week.`
+               : ` Vandaag werk je <strong>thuis</strong>, de laatste werkdag van de week.`;
+    }
+    const dagen = n => `${n} ${n === 1 ? "dag" : "dagen"}`;
+    const parts = [];
+    if (k) parts.push(`<strong>${dagen(k)} op kantoor</strong>${trips ? ` (${trips}× ${verb})` : ""}`);
+    if (t) parts.push(`<strong>${dagen(t)} thuis</strong>`);
+    if (vrij) parts.push(`${dagen(vrij)} vrij`);
+    if (open) parts.push(`${dagen(open)} nog open`);
+    const list = parts.length > 1 ? parts.slice(0, -1).join(", ") + " en " + parts[parts.length - 1] : parts[0];
+    const lead = nextWeek ? "Komende week zit je" : "Deze week zit je nog";
+    return ` ${lead} ${list}.`;
+  }
+
+  function renderEindCountdown(now) {
+    renderOffice(now);
+    renderCountdownCard("cd", settings.eindDatum, settings.eindNaam, "uit dienst", now);
+    renderCountdownCard("cd2", settings.aftel2Datum, settings.aftel2Naam, "de datum", now);
+  }
+  $("cd2-card").addEventListener("click", () => { openSettings(); setTimeout(() => $("f-aftel2naam").focus(), 50); });
   $("cd-card").addEventListener("click", () => { openSettings(); setTimeout(() => $("f-eindnaam").focus(), 50); });
 
   // ================= Mijlpalen =================
@@ -1083,6 +1244,23 @@
     $("lead").textContent = "Netto verdiend in " + mn;
   }
 
+  // ================= Sprints =================
+  function sprintLen() { return Math.max(1, Math.round(settings.sprintWeken || 2)) * 7; }
+  function sprintStartNr(d) {
+    const a = parseDate(settings.sprintDatum); if (!a) return null;
+    const diff = Math.round((midnight(d) - midnight(a)) / 86400000), L = sprintLen();
+    if (diff % L !== 0) return null;
+    const n = (settings.sprintNr | 0) + diff / L;
+    return n > 0 ? n : null;
+  }
+  function currentSprint(now) {
+    const a = parseDate(settings.sprintDatum); if (!a) return null;
+    const diff = Math.floor((midnight(now) - midnight(a)) / 86400000), L = sprintLen();
+    const k = Math.floor(diff / L), start = addDays(midnight(a), k * L);
+    return { nr: (settings.sprintNr | 0) + k, start, end: addDays(start, L - 1) };
+  }
+  const sprBadge = d => { const n = sprintStartNr(d); return n ? `<span class="spr" title="Start sprint ${n}">▶ S${n}</span>` : ""; };
+
   // ================= Kalender =================
   const nowInit = new Date();
   let viewY = nowInit.getFullYear(), viewM = nowInit.getMonth();
@@ -1101,17 +1279,18 @@
         const w = document.createElement("div");
         w.className = "day weekend" + (keyOf(d) === todayKey ? " today" : "");
         w.setAttribute("aria-label", longDay(d) + ", weekend");
-        w.innerHTML = `<span class="n">${d.getDate()}</span><span class="amt">vrij</span>`;
+        w.innerHTML = `<span class="n">${d.getDate()}${sprBadge(d)}</span><span class="amt">vrij</span>`;
         daysEl.appendChild(w);
         return;
       }
       const b = document.createElement("button");
       b.type = "button"; b.className = "day";
-      b.innerHTML = `<span class="n">${d.getDate()}</span><span class="amt"></span>`;
+      b.innerHTML = `<span class="n">${d.getDate()}${sprBadge(d)}</span><span class="amt"></span><span class="loc" aria-hidden="true"></span>`;
       b.addEventListener("click", () => {
         if (d < S.start) return;
         const k = keyOf(d);
         if (calMode === "optellen") { selected.has(k) ? selected.delete(k) : selected.add(k); updateCalendar(new Date()); return; }
+        if (calMode === "locatie") { if (!holidayName(d) && !verlof.has(k)) cycleLocatie(d); return; }
         if (holidayName(d)) return;
         verlof.has(k) ? verlof.delete(k) : verlof.add(k);
         persistVerlof(); refreshSlow(new Date(), true);
@@ -1123,17 +1302,22 @@
   }
   function updateCalendar(now) {
     const md = monthData(viewY, viewM, now);
-    let done = 0, work = 0, leave = 0, hol = 0;
+    let done = 0, work = 0, leave = 0, hol = 0, nK = 0, nT = 0;
     daysEl.querySelectorAll("button.day").forEach((el, i) => {
       const x = md.info[i]; if (!x) return;
-      el.classList.remove("done", "today", "off", "holiday", "leave", "sel");
+      el.classList.remove("done", "today", "off", "holiday", "leave", "sel", "loc-empty");
+      const locEl = el.querySelector(".loc");
+      const loc = x.active && !x.holiday && !x.leave ? locatieVan(x.date) : null;
+      locEl.textContent = loc === "k" ? "🏢" : loc === "t" ? "🏠" : (calMode === "locatie" && x.active && !x.holiday && !x.leave ? "·" : "");
+      if (!loc && calMode === "locatie") el.classList.add("loc-empty");
+      if (loc === "k") nK++; else if (loc === "t") nT++;
       const isSel = calMode === "optellen" && selected.has(keyOf(x.date));
       if (isSel) el.classList.add("sel");
       if (calMode === "optellen") el.setAttribute("aria-pressed", isSel); else el.removeAttribute("aria-pressed");
       const amt = el.querySelector(".amt");
       let label = longDay(x.date);
       if (!x.active) { el.classList.add("off"); el.disabled = true; amt.textContent = "—"; el.setAttribute("aria-label", label + ", voor je startdatum"); return; }
-      el.disabled = calMode === "verlof" && !!x.holiday;
+      el.disabled = (calMode === "verlof" || calMode === "locatie") && !!x.holiday;
       if (x.holiday) { el.classList.add("holiday"); amt.textContent = x.holiday; hol++; label += ", " + x.holiday; }
       else if (x.leave) { el.classList.add("leave"); amt.textContent = "Verlof"; leave++; label += ", verlof"; }
       else { work++; if (x.fraction >= 1) done++; }
@@ -1144,13 +1328,21 @@
         if (x.fraction >= 1) { el.classList.add("done"); amt.textContent = eur.format(md.perDay); }
         else amt.textContent = eur0.format(md.perDay);
       }
-      el.setAttribute("aria-label", label + (calMode === "optellen" ? ", klik om op te tellen" : x.holiday ? "" : ", klik om verlof te wisselen"));
+      if (loc) label += loc === "k" ? ", op kantoor" : ", thuiswerken";
+      const sn = sprintStartNr(x.date); if (sn) label += `, start sprint ${sn}`;
+      el.setAttribute("aria-label", label + (calMode === "optellen" ? ", klik om op te tellen" : calMode === "locatie" ? (x.holiday || x.leave ? "" : ", klik om kantoor of thuis te wisselen") : x.holiday ? "" : ", klik om verlof te wisselen"));
     });
     renderSelection(md);
     const parts = [`${done} van ${work} werkdagen af`];
     if (leave) parts.push(`${leave} ${leave === 1 ? "verlofdag" : "verlofdagen"}`);
     if (hol) parts.push(`${hol} ${hol === 1 ? "feestdag" : "feestdagen"}`);
+    if (nK || nT) parts.push(`${nK}× kantoor, ${nT}× thuis`);
     $("month-meta").textContent = parts.join(", ");
+    const cs = currentSprint(now), lg = $("spr-legend");
+    lg.parentElement.hidden = !parseDate(settings.sprintDatum);
+    let csEnd = cs && cs.end; while (csEnd && !isWeekday(csEnd)) csEnd = addDays(csEnd, -1);
+    if (cs && cs.nr > 0) lg.textContent = `Sprintstart · nu sprint ${cs.nr}, laatste dag ${dayFmt(csEnd)}`;
+    else lg.textContent = "Sprintstart";
   }
   function renderSelection(md) {
     const box = $("sel-box");
@@ -1170,11 +1362,15 @@
     calMode = mode;
     $("mode-verlof").setAttribute("aria-pressed", mode === "verlof");
     $("mode-sum").setAttribute("aria-pressed", mode === "optellen");
-    $("cal-hint").textContent = mode === "verlof" ? "Klik op een werkdag om verlof aan of uit te zetten." : "Klik dagen aan om op te tellen wat ze opleveren.";
+    $("mode-loc").setAttribute("aria-pressed", mode === "locatie");
+    $("cal-hint").textContent = mode === "verlof" ? "Klik op een werkdag om verlof aan of uit te zetten."
+      : mode === "locatie" ? ((settings.kantoorDagen || []).length ? "Klik op een werkdag om tussen kantoor en thuis te wisselen." : "Klik op een werkdag: kantoor → thuis → leeg. Tip: stel vaste kantoordagen in bij Instellingen.")
+      : "Klik dagen aan om op te tellen wat ze opleveren.";
     updateCalendar(new Date());
   }
   $("mode-verlof").addEventListener("click", () => setCalMode("verlof"));
   $("mode-sum").addEventListener("click", () => setCalMode("optellen"));
+  $("mode-loc").addEventListener("click", () => setCalMode("locatie"));
   $("sel-clear").addEventListener("click", () => { selected.clear(); updateCalendar(new Date()); });
   $("prev").addEventListener("click", () => { selected.clear(); viewM--; if (viewM < 0) { viewM = 11; viewY--; } buildCalendar(); updateCalendar(new Date()); });
   $("next").addEventListener("click", () => { selected.clear(); viewM++; if (viewM > 11) { viewM = 0; viewY++; } buildCalendar(); updateCalendar(new Date()); });
@@ -1372,8 +1568,11 @@
     wettelijk: ["f-wet", "n"], bovenwettelijk: ["f-bwet", "n"], urenPerDag: ["f-urendag", "n"],
     saldoUren: ["f-saldo", "n"], saldoDatum: ["f-saldodatum", "s"],
     eindNaam: ["f-eindnaam", "s"], eindDatum: ["f-einddatum", "s"],
+    aftel2Naam: ["f-aftel2naam", "s"], aftel2Datum: ["f-aftel2datum", "s"],
+    ritten: ["f-ritten", "n"], vervoer: ["f-vervoer", "s"],
+    sprintDatum: ["f-sprintdatum", "s"], sprintNr: ["f-sprintnr", "n"], sprintWeken: ["f-sprintweken", "n"],
   };
-  function fillForm(src) { for (const k in F) $(F[k][0]).value = src[k]; syncLoondag(); }
+  function fillForm(src) { for (const k in F) $(F[k][0]).value = src[k]; $("f-kantoor").querySelectorAll("input").forEach(c => { c.checked = (src.kantoorDagen || []).includes(+c.value); }); syncLoondag(); }
   function syncLoondag() { $("f-loondag").disabled = $("f-loonmodus").value !== "dag"; }
   $("f-loonmodus").addEventListener("change", syncLoondag);
   function openSettings() { fillForm(settings); if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", ""); }
@@ -1389,6 +1588,7 @@
       if (F[k][1] === "n") { const n = parseFloat(v); next[k] = isFinite(n) ? n : DEFAULTS[k]; }
       else next[k] = v;
     }
+    next.kantoorDagen = [...$("f-kantoor").querySelectorAll("input:checked")].map(c => +c.value);
     if (!parseDate(next.start)) next.start = DEFAULTS.start;
     if (!(parseTime(next.tot) > parseTime(next.van))) { next.van = DEFAULTS.van; next.tot = DEFAULTS.tot; }
     const startChanged = next.start !== settings.start;
@@ -1484,6 +1684,7 @@
     } else {
       sub = `Weekend. De teller staat stil en loopt maandag om ${fmtTime(S.startUur)} weer.`;
     }
+    sub += weekPlan(now);
     sub += ` Nog ${remaining} ${remaining === 1 ? "werkdag" : "werkdagen"} te gaan deze maand.`;
     $("sub").innerHTML = sub;
     $("sub-txt").textContent = subTxt;

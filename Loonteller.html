@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
+<style id="app-style">
   :root {
     --page: #E7EAEF; --surface: #F4F5F8; --ink: #17202E; --muted: #5D6675; --line: #CDD2DA;
     --dial: #13213A; --dial-2: #1C2E4D; --steel: #D9DDE4; --brass: #B38E55; --signal: #C2412D;
@@ -98,7 +98,16 @@
   .tb-track { position: relative; height: 10px; border-radius: 5px; background: var(--line); }
   .tb-track span { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--brass); border-radius: 5px; }
   .tb-track i { position: absolute; top: -4px; width: 3px; height: 18px; border-radius: 2px; background: var(--signal); transform: translateX(-1.5px); left: 0; display: none; }
-  .tb-scale { display: flex; justify-content: space-between; font-size: .78rem; color: var(--muted); margin-top: 6px; }
+  .tb-scale { position: relative; height: 2.5em; font-size: .74rem; color: var(--muted); margin-top: 6px; line-height: 1.2; }
+  .tb-scale span { position: absolute; top: 0; transform: translateX(-50%); text-align: center; white-space: nowrap; }
+  .tb-scale span:first-child { transform: none; text-align: left; }
+  .tb-scale span:last-child { transform: translateX(-100%); text-align: right; }
+  .tb-scale span b { display: block; font-weight: 500; }
+  .tb-scale span.hit { color: var(--ink); }
+  .tb-scale span.hit b { color: var(--brass); }
+  .tb-track .q { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--surface); }
+  .tb-left { margin: 8px 0 0; font-size: .92rem; color: var(--muted); }
+  .tb-left strong { color: var(--ink); font-weight: 500; }
   .tb-grid { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 18px; align-items: center; }
   .tb-ring { width: 120px; height: 120px; display: block; }
   .tb-ring .ring-bg { fill: none; stroke: var(--line); stroke-width: 10; }
@@ -150,7 +159,9 @@
   .nav { display: flex; align-items: center; gap: 6px; }
 
   /* Milestones */
-  .ms { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .ms { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 190px), 1fr)); gap: 10px; }
+  .m { padding: 14px; }
+  .m .medal { width: 32px; height: 32px; font-size: .85rem; }
   .m { position: relative; padding: 16px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; text-align: left; min-width: 0; }
   .m .medal { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; border: 1.5px dashed var(--line); color: var(--muted); font-weight: 500; font-size: .95rem; }
   .m strong { font-weight: 500; font-size: 1.08rem; line-height: 1.25; }
@@ -251,6 +262,7 @@
   .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
   .seg button { background: transparent; border: none; padding: 8px 16px; cursor: pointer; color: var(--muted); }
   .seg button[aria-pressed="true"] { background: var(--ink); color: var(--page); }
+  .imp-confirm { width: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; padding: 10px 12px; border: 1px solid var(--brass); border-radius: 10px; font-size: .92rem; }
   .export-status { width: 100%; margin: 0; font-size: .88rem; color: var(--muted); min-height: 1.3em; }
 
   /* Breakdown */
@@ -384,8 +396,9 @@
           <div>
             <div class="tb-head"><span id="tb-label">Vandaag verdiend</span><span id="tb-rate"></span></div>
             <div class="tb-amount" id="tb-amount">€ 0,00</div>
-            <div class="tb-track"><span id="tb-fill"></span><i id="tb-now"></i></div>
+            <div class="tb-track" id="tb-track"><span id="tb-fill"></span><b class="q" style="left:25%"></b><b class="q" style="left:50%"></b><b class="q" style="left:75%"></b><i id="tb-now"></i></div>
             <div class="tb-scale" id="tb-scale"></div>
+            <p class="tb-left" id="tb-left" aria-live="off"></p>
           </div>
         </div>
         <div class="tb-end" id="tb-end">
@@ -429,7 +442,7 @@
     <div class="stat"><dt>Deze week</dt><dd id="s-week">€ 0,00</dd></div>
     <div class="stat"><dt>Per werkdag</dt><dd id="s-day">€ 0,00</dd></div>
     <div class="stat"><dt>Per uur</dt><dd id="s-hour">€ 0,00</dd></div>
-    <div class="stat"><dt>Nog te verdienen deze maand</dt><dd id="s-left">€ 0,00</dd></div>
+    <div class="stat"><dt id="s-left-lbl">Nog te verdienen deze maand</dt><dd id="s-left">€ 0,00</dd></div>
   </dl>
 
   <section class="block" aria-labelledby="ms-title">
@@ -530,6 +543,22 @@
     </div>
   </section>
 
+  <section class="block" aria-labelledby="data-title">
+    <div class="head"><h2 id="data-title">Je gegevens meenemen</h2><p>Instellingen, verlof, kantoordagen, loonstroken en mijlpalen</p></div>
+    <div class="export">
+      <button type="button" class="pill primary" id="dl-app">Download app met mijn gegevens</button>
+      <button type="button" class="pill" id="dl-backup">Back-up downloaden (.json)</button>
+      <button type="button" class="pill" id="imp-btn">Back-up terugzetten</button>
+      <input type="file" id="imp-file" accept=".json,.html,application/json,text/html" hidden>
+      <p class="export-status" id="data-status" role="status">De gedownloade app neemt je gegevens mee en werkt daarna los van claude.ai, in elke browser.</p>
+      <div id="imp-confirm" class="imp-confirm" hidden>
+        <span id="imp-summary"></span>
+        <button type="button" class="pill primary" id="imp-yes">Terugzetten</button>
+        <button type="button" class="pill" id="imp-no">Annuleren</button>
+      </div>
+    </div>
+  </section>
+
   <details>
     <summary>Hoe dit is berekend</summary>
     <div class="calc"><table id="calc"></table></div>
@@ -570,8 +599,10 @@
       <div class="fields">
         <label>Wanneer<select id="f-loonmodus"><option value="week">In de laatste week van de maand</option><option value="dag">Op een vaste dag</option></select></label>
         <label>Vaste dag van de maand<input type="number" id="f-loondag" min="1" max="31" step="1"></label>
+        <label>Loonperiode<select id="f-periode"><option value="loondag">Van loondag tot loondag (bv. 24 okt t/m 23 nov)</option><option value="maand">Kalendermaand (1e t/m laatste dag)</option></select></label>
+        <label>Valt die dag in het weekend of op een feestdag?<select id="f-loonschuif"><option value="na">Dan de eerstvolgende werkdag</option><option value="voor">Dan de werkdag ervoor</option></select></label>
       </div>
-      <p class="hint">Valt een vaste loondag in het weekend, dan gaat de teller uit van de vrijdag ervoor.</p>
+      <p class="hint">Bijvoorbeeld de 24e: valt die op een zaterdag, dan wordt het met "eerstvolgende werkdag" de maandag erna. Twijfel je over de loonperiode? Kijk op je loonstrook bij "periode", of vergelijk je eerste storting met de schatting in de loonstrook-check.</p>
     </fieldset>
     <fieldset>
       <legend>Kantoor en thuiswerken</legend>
@@ -637,11 +668,33 @@
 
 <script>
 (() => {
+  // ================= Bron van de pagina (voor de download) =================
+  const SCRIPT_SRC = document.currentScript ? document.currentScript.textContent : "";
+  const STYLE_SRC = (document.getElementById("app-style") || {}).textContent || "";
+  const PRISTINE = ["main", "dialog#settings", "canvas#confetti", "#toast"].map(sel => { const el = document.querySelector(sel); return el ? el.outerHTML : ""; }).join("\n");
+  const DATA_KEYS = ["loonteller-settings", "loonteller-verlof", "loonteller-stroken", "loonteller-theme"];
+  const markUpdated = () => { try { localStorage.setItem("loonteller-updated", String(Date.now())); } catch (e) {} };
+
+  // Gegevens die in een gedownloade versie zijn meegegeven: alleen gebruiken als ze nieuwer zijn dan wat hier al staat
+  (function applySeed() {
+    const seed = window.__LOONTELLER_SEED__;
+    if (!seed || !seed.data) return;
+    try {
+      const stamp = String(seed.updated || 0);
+      if (localStorage.getItem("loonteller-seed") === stamp) return;          // deze set is al eens ingeladen
+      const localT = +localStorage.getItem("loonteller-updated") || 0;
+      localStorage.setItem("loonteller-seed", stamp);
+      if (localStorage.getItem("loonteller-settings") && localT >= (seed.updated || 0)) return; // lokaal is nieuwer
+      DATA_KEYS.forEach(k => { if (typeof seed.data[k] === "string") localStorage.setItem(k, seed.data[k]); });
+      localStorage.setItem("loonteller-updated", stamp);
+    } catch (e) {}
+  })();
+
   // ================= Instellingen =================
   const DEFAULTS = {
     bruto: 3500, vakantiegeld: 8, pensioen: 0, start: "2026-10-01",
     van: "09:00", tot: "18:00",
-    loonmodus: "week", loondag: 25,
+    loonmodus: "dag", loondag: 24, loonschuif: "na", periode: "loondag",
     wettelijk: 20, bovenwettelijk: 5, urenPerDag: 8, saldoUren: 40, saldoDatum: "2026-10-04",
     useStrook: false, eindOverrides: {},
     eindNaam: "uit dienst", eindDatum: "2026-12-31",
@@ -693,6 +746,13 @@
   function applySettings() {
     // eenmalige correctie: oude standaardwaarde (do 5 nov) → ma 5 okt
     if (settings.sprintDatum === "2026-11-05" && settings.sprintNr === 86) settings.sprintDatum = "2026-10-05";
+    // eenmalige omzetting: volgens HR wordt het loon op de 24e uitbetaald (weekend → eerstvolgende werkdag)
+    if (!settings.loonV2) {
+      settings.loonmodus = "dag"; settings.loondag = 24; settings.loonschuif = "na"; settings.loonV2 = true;
+      setTimeout(persistSettings, 0);
+    }
+    // eenmalig: loonperiode van loondag tot loondag (op verzoek), terug te zetten in Instellingen
+    if (!settings.periodeV1) { settings.periode = "loondag"; settings.periodeV1 = true; setTimeout(persistSettings, 0); }
     S.start = midnight(parseDate(settings.start) || parseDate(DEFAULTS.start));
     S.startUur = parseTime(settings.van);
     S.eindUur = parseTime(settings.tot);
@@ -703,12 +763,13 @@
     S.schattingMaand = S.jaar.netto / 12;
     S.strookBasis = latestFullStrook();
     S.nettoMaand = settings.useStrook && S.strookBasis ? S.strookBasis.netto : S.schattingMaand;
-    S.milestones = [
-      { id: "m1000", label: "€ 1.000 verdiend", target: 1000 },
-      { id: "maand1", label: "Eerste maandsalaris", target: S.nettoMaand },
-      { id: "m5000", label: "€ 5.000 verdiend", target: 5000 },
-      { id: "m8000", label: "€ 8.000 verdiend", target: 8000 },
-    ].sort((a, b) => a.target - b.target);
+    // Elke € 1.000 tot je einddatum (of een jaar vooruit), plus je eerste volle maandsalaris
+    const endD = parseDate(settings.eindDatum);
+    const horizon = endD && endD > S.start ? at(endD, 24) : addDays(S.start, 365);
+    const topK = Math.max(1, Math.floor(earnedUntil(horizon) / 1000));
+    S.milestones = [{ id: "maand1", label: "Eerste maandsalaris", target: S.nettoMaand }];
+    for (let k = 1; k <= Math.min(topK, 60); k++) S.milestones.push({ id: "m" + k * 1000, label: `€ ${(k * 1000).toLocaleString("nl-NL")} verdiend`, target: k * 1000 });
+    S.milestones.sort((a, b) => a.target - b.target);
     S.milestones.forEach(m => { m.date = timeToReach(m.target); });
     dialFor = ""; holidayCacheReset();
     $("foot-start").textContent = "Begonnen op " + S.start.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
@@ -755,6 +816,7 @@
   let strookRef = null, chainK = Promise.resolve();
   function persistStroken() {
     try { localStorage.setItem("loonteller-stroken", JSON.stringify(stroken)); } catch (e) {}
+    markUpdated();
     if (strookRef) chainK = chainK.then(() => strookRef.set({ months: stroken })).catch(() => {});
   }
   let verlof = new Set();
@@ -765,11 +827,13 @@
   function persistVerlof() {
     const days = [...verlof].sort();
     try { localStorage.setItem("loonteller-verlof", JSON.stringify(days)); } catch (e) {}
+    markUpdated();
     if (verlofRef) chainV = chainV.then(() => verlofRef.set({ days })).catch(() => {});
   }
   function persistSettings() {
     const doc = { settings, celebrated: [...celebrated] };
     try { localStorage.setItem("loonteller-settings", JSON.stringify(doc)); } catch (e) {}
+    markUpdated();
     if (settingsRef) chainS = chainS.then(() => settingsRef.set(doc)).catch(() => {});
   }
   async function connectDb() {
@@ -818,19 +882,47 @@
     if (now <= s) return 0; if (now >= e) return 1;
     return (now - s) / (e - s);
   }
-  function monthData(y, m, now) {
-    const days = weekdaysOfMonth(y, m), perDay = S.nettoMaand / days.length;
-    let total = 0;
+  // ================= Loonperiode =================
+  // "maand": kalendermaand. "loondag": van loondag tot loondag (bv. 24 okt t/m 23 nov, uitbetaald rond 24 nov).
+  const periodMode = () => settings.periode === "loondag" && settings.loonmodus === "dag";
+  const payDom = () => Math.max(1, Math.min(28, (settings.loondag | 0) || 24));
+  function periodOf(d) {
+    if (!periodMode()) {
+      const st = new Date(d.getFullYear(), d.getMonth(), 1);
+      return { start: st, end: new Date(d.getFullYear(), d.getMonth() + 1, 1), key: "m" + keyOf(st) };
+    }
+    const N = payDom();
+    let st = new Date(d.getFullYear(), d.getMonth(), N);
+    if (midnight(d) < st) st = new Date(d.getFullYear(), d.getMonth() - 1, N);
+    return { start: st, end: new Date(st.getFullYear(), st.getMonth() + 1, N), key: "p" + keyOf(st) };
+  }
+  const pwCache = {};
+  function weekdaysIn(p) {
+    if (pwCache[p.key]) return pwCache[p.key];
+    const out = [];
+    for (let d = new Date(p.start); d < p.end; d = addDays(d, 1)) if (isWeekday(d)) out.push(new Date(d));
+    return (pwCache[p.key] = out);
+  }
+  // Wat één werkdag netto waard is: maandloon gedeeld door de werkdagen in zijn loonperiode
+  const dayValue = d => S.nettoMaand / Math.max(1, weekdaysIn(periodOf(d)).length);
+  function daysData(days, now) {
+    let total = 0, full = 0;
     const info = days.map(d => {
-      const active = d >= S.start, f = active ? dayFraction(d, now) : 0;
-      total += f * perDay;
-      return { date: d, fraction: f, active, holiday: holidayName(d), leave: verlof.has(keyOf(d)) };
+      const active = d >= S.start, v = dayValue(d), f = active ? dayFraction(d, now) : 0;
+      total += f * v; if (active) full += v;
+      return { date: d, fraction: f, active, value: v, holiday: holidayName(d), leave: verlof.has(keyOf(d)) };
     });
-    return { days, perDay, total, info, full: info.filter(x => x.active).length * perDay };
+    const today = midnight(now);
+    const ref = info.find(x => sameDay(x.date, today)) || info.find(x => x.date >= today) || info[info.length - 1];
+    return { days, info, total, full, perDay: ref ? ref.value : S.nettoMaand / 21 };
+  }
+  function monthData(y, m, now) { return daysData(weekdaysOfMonth(y, m), now); }
+  function periodData(now) {
+    const p = periodOf(now);
+    return { ...daysData(weekdaysIn(p), now), start: p.start, end: p.end, key: p.key, last: addDays(p.end, -1) };
   }
   function monthTotal(y, m, now) {
-    const days = weekdaysOfMonth(y, m), perDay = S.nettoMaand / days.length;
-    let t = 0; for (const d of days) if (d >= S.start) t += dayFraction(d, now) * perDay;
+    let t = 0; for (const d of weekdaysOfMonth(y, m)) if (d >= S.start) t += dayFraction(d, now) * dayValue(d);
     return t;
   }
   function earnedUntil(now) {
@@ -852,9 +944,11 @@
   function payWindow(y, m) {
     if (settings.loonmodus === "dag") {
       const last = new Date(y, m + 1, 0).getDate();
-      let d = new Date(y, m, Math.min(Math.max(1, settings.loondag | 0), last));
-      while (!isWeekday(d) || holidayName(d)) d = addDays(d, -1);
-      return { start: d, end: d, fixed: true };
+      const nominal = new Date(y, m, Math.min(Math.max(1, settings.loondag | 0), last));
+      const step = settings.loonschuif === "voor" ? -1 : 1;
+      let d = new Date(nominal);
+      while (!isWeekday(d) || holidayName(d)) d = addDays(d, step);
+      return { start: d, end: d, fixed: true, nominal, shifted: !sameDay(d, nominal) };
     }
     const work = weekdaysOfMonth(y, m).filter(d => !holidayName(d));
     const lastD = work[work.length - 1];
@@ -870,7 +964,7 @@
   }
   // Verwachte loondag: zelfde dag van de maand als de laatst ingevulde storting, anders de instelling
   function expectedPay(y, m) {
-    const dom = lastReceivedDom();
+    const dom = settings.loonmodus === "dag" ? null : lastReceivedDom();
     if (dom) {
       const last = new Date(y, m + 1, 0).getDate();
       let d = new Date(y, m, Math.min(dom, last));
@@ -879,7 +973,9 @@
     }
     return payWindow(y, m);
   }
-  const payRange = w => w.fixed ? `${w.predicted ? "rond " : ""}${dayFmt(w.start)}` : `${dayFmt(w.start)} t/m ${dayFmt(w.end)}`;
+  const payRange = w => w.fixed
+    ? `${w.predicted ? "rond " : ""}${dayFmt(w.start)}${w.shifted ? ` (${w.nominal.getDate()}e valt ${holidayName(w.nominal) ? "op " + holidayName(w.nominal) : "in het weekend"})` : ""}`
+    : `${dayFmt(w.start)} t/m ${dayFmt(w.end)}`;
   function renderPayday(now) {
     const y = now.getFullYear(), m = now.getMonth(), cur = monthKey(y, m);
     const rec = stroken[cur] && stroken[cur].datum;
@@ -1226,8 +1322,9 @@
   const R = 122, C = 2 * Math.PI * R, CS = 2 * Math.PI * 30;
   arc.setAttribute("stroke-dasharray", C); subArc.setAttribute("stroke-dasharray", CS);
   let dialFor = "";
+  const shortD = d => d.toLocaleDateString("nl-NL", { day: "numeric", month: "short" }).replace(".", "");
   function buildDial(y, m, md) {
-    if (dialFor === y + "-" + m) return; dialFor = y + "-" + m;
+    if (dialFor === md.key) return; dialFor = md.key;
     ticksG.innerHTML = "";
     const n = md.days.length;
     md.days.forEach((d, i) => {
@@ -1239,9 +1336,14 @@
       l.setAttribute("stroke-width", mon ? 2.5 : 1.5);
       ticksG.appendChild(l);
     });
-    const mn = monthName(y, m);
-    $("dial-month").textContent = mn;
-    $("lead").textContent = "Netto verdiend in " + mn;
+    if (periodMode()) {
+      $("dial-month").textContent = `${shortD(md.start)} – ${shortD(md.last)}`;
+      $("lead").textContent = `Netto verdiend in je loonperiode, ${shortD(md.start)} t/m ${shortD(md.last)}`;
+    } else {
+      const mn = monthName(y, m);
+      $("dial-month").textContent = mn;
+      $("lead").textContent = "Netto verdiend in " + mn;
+    }
   }
 
   // ================= Sprints =================
@@ -1323,10 +1425,10 @@
       else { work++; if (x.fraction >= 1) done++; }
       if (sameDay(x.date, now)) {
         el.classList.add("today"); el.style.setProperty("--p", x.fraction);
-        if (!x.holiday && !x.leave) amt.textContent = eur.format(x.fraction * md.perDay);
+        if (!x.holiday && !x.leave) amt.textContent = eur.format(x.fraction * x.value);
       } else if (!x.holiday && !x.leave) {
-        if (x.fraction >= 1) { el.classList.add("done"); amt.textContent = eur.format(md.perDay); }
-        else amt.textContent = eur0.format(md.perDay);
+        if (x.fraction >= 1) { el.classList.add("done"); amt.textContent = eur.format(x.value); }
+        else amt.textContent = eur0.format(x.value);
       }
       if (loc) label += loc === "k" ? ", op kantoor" : ", thuiswerken";
       const sn = sprintStartNr(x.date); if (sn) label += `, start sprint ${sn}`;
@@ -1349,8 +1451,8 @@
     box.hidden = calMode !== "optellen";
     if (box.hidden) return;
     const items = md.info.filter(x => x.active && selected.has(keyOf(x.date)));
-    const value = items.length * md.perDay;
-    const extra = items.reduce((t, x) => t + (1 - x.fraction) * md.perDay, 0);
+    const value = items.reduce((t, x) => t + x.value, 0);
+    const extra = items.reduce((t, x) => t + (1 - x.fraction) * x.value, 0);
     $("sel-count").textContent = items.length ? `${items.length} ${items.length === 1 ? "dag" : "dagen"} samen` : "Nog geen dagen gekozen";
     $("sel-value").textContent = eur.format(value);
     $("sel-extra").textContent = eur.format(extra);
@@ -1411,8 +1513,10 @@
     return out.reverse();
   }
   function estimateFor(y, m) {
-    const days = weekdaysOfMonth(y, m), active = days.filter(d => d >= S.start).length;
-    return S.schattingMaand * active / days.length;
+    // Loonstrook van maand m: bij "loondag" de periode die eindigt op de loondag van die maand
+    const days = periodMode() ? weekdaysIn(periodOf(new Date(y, m, payDom() - 1))) : weekdaysOfMonth(y, m);
+    const active = days.filter(d => d >= S.start).length;
+    return S.schattingMaand * active / Math.max(1, days.length);
   }
   const parseEuro = v => { const t = String(v).trim().replace(/[€\s]/g, ""); if (!t) return null; const n = parseFloat(t.includes(",") ? t.replace(/\./g, "").replace(",", ".") : t); return isFinite(n) && n > 0 ? Math.round(n * 100) / 100 : null; };
   function renderStroken() {
@@ -1504,9 +1608,9 @@
     let sum = 0;
     md.info.forEach(x => {
       const kind = !x.active ? "Voor startdatum" : x.holiday ? `Feestdag (${x.holiday})` : x.leave ? "Verlof" : "Werkdag";
-      const earned = x.active ? x.fraction * md.perDay : 0; sum += earned;
+      const earned = x.active ? x.fraction * x.value : 0; sum += earned;
       const status = !x.active ? "" : x.fraction >= 1 ? "Afgerond" : x.fraction > 0 ? "Bezig" : "Nog te gaan";
-      rows.push([keyOf(x.date), x.date.toLocaleDateString("nl-NL", { weekday: "long" }), kind, x.active ? csvNum(md.perDay) : "", csvNum(earned), status]);
+      rows.push([keyOf(x.date), x.date.toLocaleDateString("nl-NL", { weekday: "long" }), kind, x.active ? csvNum(x.value) : "", csvNum(earned), status]);
     });
     const ont = stroken[monthKey(y, m)] && stroken[monthKey(y, m)].netto;
     rows.push([], ["Totaal opgebouwd", "", "", csvNum(md.full), csvNum(sum), ""]);
@@ -1514,18 +1618,18 @@
     return rows;
   }
   let downloadsNs;
-  async function saveFile(filename, text) {
+  async function saveFile(filename, text, mime = "text/csv;charset=utf-8", bom = true) {
     if (downloadsNs === undefined) {
       downloadsNs = null;
       try { if (window.claude && typeof window.claude.use === "function") downloadsNs = await window.claude.use("downloads"); } catch (e) { downloadsNs = null; }
     }
-    const data = "\ufeff" + text;
+    const data = (bom ? "\ufeff" : "") + text;
     if (downloadsNs) {
       try { await downloadsNs.save({ filename, data }); return "ok"; }
-      catch (e) { return e && e.code === "declined" ? "declined" : e && e.code === "rate_limited" ? "busy" : "failed"; }
+      catch (e) { return e && e.code === "declined" ? "declined" : e && e.code === "rate_limited" ? "busy" : e && e.code === "extension_not_enabled" ? "type" : "failed"; }
     }
     try {
-      const url = URL.createObjectURL(new Blob([data], { type: "text/csv;charset=utf-8" }));
+      const url = URL.createObjectURL(new Blob([data], { type: mime }));
       const a = document.createElement("a"); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 2000);
       return "ok";
@@ -1540,6 +1644,86 @@
     const r = await saveFile(name, toCsv(rows));
     btn.disabled = false;
     st.textContent = r === "ok" ? `${name} is klaar.` : r === "declined" ? "Download geannuleerd." : r === "busy" ? "Er staat al een download klaar, probeer het zo nog eens." : "Downloaden lukt hier niet.";
+  });
+
+  // ================= Gegevens meenemen =================
+  function collectData() {
+    const data = {
+      "loonteller-settings": JSON.stringify({ settings, celebrated: [...celebrated] }),
+      "loonteller-verlof": JSON.stringify([...verlof].sort()),
+      "loonteller-stroken": JSON.stringify(stroken),
+    };
+    try { const t = localStorage.getItem("loonteller-theme"); if (t) data["loonteller-theme"] = t; } catch (e) {}
+    return { app: "loonteller", version: 1, updated: Date.now(), data };
+  }
+  function buildStandalone() {
+    const json = JSON.stringify(collectData()).replace(/</g, "\\u003c");
+    return [
+      "<!DOCTYPE html>", '<html lang="nl">', "<head>", '<meta charset="utf-8">',
+      '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">',
+      "<title>Loonteller</title>",
+      '<link rel="preconnect" href="https://fonts.googleapis.com">',
+      '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
+      '<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">',
+      '<style id="app-style">' + STYLE_SRC + "</style>", "</head>", "<body>", PRISTINE,
+      "<script>window.__LOONTELLER_SEED__ = " + json + ";<\/script>",
+      "<script>" + SCRIPT_SRC + "<\/script>", "</body>", "</html>", "",
+    ].join("\n");
+  }
+  const dataMsg = r => r === "declined" ? "Download geannuleerd." : r === "busy" ? "Er staat al een download klaar, probeer het zo nog eens." : r === "type" ? "Dit bestandstype kan hier niet worden gedownload. Gebruik de back-up (.json)." : "Downloaden lukt hier niet.";
+  $("dl-app").addEventListener("click", async () => {
+    const st = $("data-status"), btn = $("dl-app");
+    if (!SCRIPT_SRC) { st.textContent = "De app kan zichzelf hier niet kopiëren. Gebruik de back-up (.json)."; return; }
+    btn.disabled = true; st.textContent = "App met je gegevens klaarmaken…";
+    const r = await saveFile("loonteller.html", buildStandalone(), "text/html;charset=utf-8", false);
+    btn.disabled = false;
+    st.textContent = r === "ok" ? "loonteller.html is klaar. Open het in je browser: je gegevens staan er meteen in." : dataMsg(r);
+  });
+  $("dl-backup").addEventListener("click", async () => {
+    const st = $("data-status"), name = `loonteller-backup-${keyOf(new Date())}.json`;
+    const r = await saveFile(name, JSON.stringify(collectData(), null, 2), "application/json", false);
+    st.textContent = r === "ok" ? `${name} is klaar.` : dataMsg(r);
+  });
+
+  let pendingImport = null;
+  function parseBackup(text) {
+    let obj = null;
+    try { obj = JSON.parse(text); } catch (e) {
+      const m = text.match(/window\.__LOONTELLER_SEED__\s*=\s*(\{[\s\S]*?\});\s*<\/script>/);
+      if (m) { try { obj = JSON.parse(m[1]); } catch (e2) {} }
+    }
+    return obj && obj.data && typeof obj.data["loonteller-settings"] === "string" ? obj : null;
+  }
+  $("imp-btn").addEventListener("click", () => { $("imp-file").value = ""; $("imp-file").click(); });
+  $("imp-file").addEventListener("change", async e => {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    const st = $("data-status");
+    const obj = parseBackup(await f.text());
+    if (!obj) { st.textContent = "Dit bestand is geen back-up van de loonteller. Kies een .json-back-up of een gedownloade loonteller.html."; return; }
+    let nV = 0, nS = 0;
+    try { nV = JSON.parse(obj.data["loonteller-verlof"] || "[]").length; } catch (x) {}
+    try { nS = Object.keys(JSON.parse(obj.data["loonteller-stroken"] || "{}")).length; } catch (x) {}
+    pendingImport = obj;
+    const when = obj.updated ? new Date(obj.updated).toLocaleString("nl-NL", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }) : "onbekende datum";
+    $("imp-summary").textContent = `Back-up van ${when}: ${nV} ${nV === 1 ? "verlofdag" : "verlofdagen"}, ${nS} ${nS === 1 ? "maand" : "maanden"} loonstrook-gegevens. Dit vervangt je huidige gegevens.`;
+    $("imp-confirm").hidden = false;
+    st.textContent = "";
+  });
+  $("imp-no").addEventListener("click", () => { pendingImport = null; $("imp-confirm").hidden = true; });
+  $("imp-yes").addEventListener("click", () => {
+    const obj = pendingImport; if (!obj) return;
+    try {
+      const o = JSON.parse(obj.data["loonteller-settings"]);
+      settings = { ...DEFAULTS, ...(o.settings || {}) };
+      celebrated = new Set(o.celebrated || []);
+      verlof = new Set(JSON.parse(obj.data["loonteller-verlof"] || "[]"));
+      stroken = JSON.parse(obj.data["loonteller-stroken"] || "{}") || {};
+      if (obj.data["loonteller-theme"]) { document.documentElement.dataset.theme = obj.data["loonteller-theme"]; try { localStorage.setItem("loonteller-theme", obj.data["loonteller-theme"]); } catch (x) {} }
+    } catch (x) { $("data-status").textContent = "Terugzetten mislukt: het bestand is beschadigd."; return; }
+    persistSettings(); persistVerlof(); persistStroken();
+    applySettings(); buildCalendar(); renderStroken(); buildExportOptions(); refreshSlow(new Date(), true);
+    pendingImport = null; $("imp-confirm").hidden = true;
+    $("data-status").textContent = "Je back-up is teruggezet.";
   });
 
   // ================= Berekening =================
@@ -1564,7 +1748,7 @@
   const dlg = $("settings");
   const F = {
     bruto: ["f-bruto", "n"], vakantiegeld: ["f-vg", "n"], pensioen: ["f-pensioen", "n"], start: ["f-start", "s"],
-    van: ["f-van", "s"], tot: ["f-tot", "s"], loonmodus: ["f-loonmodus", "s"], loondag: ["f-loondag", "n"],
+    van: ["f-van", "s"], tot: ["f-tot", "s"], loonmodus: ["f-loonmodus", "s"], loondag: ["f-loondag", "n"], loonschuif: ["f-loonschuif", "s"], periode: ["f-periode", "s"],
     wettelijk: ["f-wet", "n"], bovenwettelijk: ["f-bwet", "n"], urenPerDag: ["f-urendag", "n"],
     saldoUren: ["f-saldo", "n"], saldoDatum: ["f-saldodatum", "s"],
     eindNaam: ["f-eindnaam", "s"], eindDatum: ["f-einddatum", "s"],
@@ -1573,7 +1757,7 @@
     sprintDatum: ["f-sprintdatum", "s"], sprintNr: ["f-sprintnr", "n"], sprintWeken: ["f-sprintweken", "n"],
   };
   function fillForm(src) { for (const k in F) $(F[k][0]).value = src[k]; $("f-kantoor").querySelectorAll("input").forEach(c => { c.checked = (src.kantoorDagen || []).includes(+c.value); }); syncLoondag(); }
-  function syncLoondag() { $("f-loondag").disabled = $("f-loonmodus").value !== "dag"; }
+  function syncLoondag() { const off = $("f-loonmodus").value !== "dag"; $("f-loondag").disabled = off; $("f-loonschuif").disabled = off; $("f-periode").disabled = off; }
   $("f-loonmodus").addEventListener("change", syncLoondag);
   function openSettings() { fillForm(settings); if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", ""); }
   function closeSettings() { if (dlg.close) dlg.close(); else dlg.removeAttribute("open"); }
@@ -1612,7 +1796,8 @@
     if (ringKey === key) return; ringKey = key;
     const scale = $("tb-scale"); scale.innerHTML = "";
     const span = end - S.startUur;
-    for (let i = 0; i <= 3; i++) scale.insertAdjacentHTML("beforeend", `<span>${fmtTime(S.startUur + span * i / 3)}</span>`);
+    [0, 25, 50, 75, 100].forEach(q => scale.insertAdjacentHTML("beforeend",
+      `<span data-q="${q}" style="left:${q}%"><b>${q === 0 ? "start" : q + "%"}</b>${fmtTime(S.startUur + span * q / 100)}</span>`));
     const g = $("ring-ticks"); g.innerHTML = "";
     for (let h = Math.ceil(S.startUur + 1e-9); h < end; h++) {
       if (h <= S.startUur) continue;
@@ -1620,6 +1805,7 @@
       g.insertAdjacentHTML("beforeend", `<line class="ring-tick" x1="${60 + 45 * Math.cos(a)}" y1="${60 + 45 * Math.sin(a)}" x2="${60 + 55 * Math.cos(a)}" y2="${60 + 55 * Math.sin(a)}"/>`);
     }
   }
+  const fmtHM = ms => { const t = Math.max(0, Math.round(ms / 60000)), h = Math.floor(t / 60), m = t % 60; return h ? `${h} uur en ${m} ${m === 1 ? "minuut" : "minuten"}` : `${m} ${m === 1 ? "minuut" : "minuten"}`; };
   function renderTodayRing(now, todayInfo, tf, workToday, todayEnd) {
     buildTodayScale(todayEnd);
     const main = $("ring-main"), sub = $("ring-sub");
@@ -1631,7 +1817,21 @@
       const ms = at(now, todayEnd) - now;
       const h = Math.floor(ms / 3600000), mi = Math.floor((ms % 3600000) / 60000);
       main.textContent = h > 0 ? `${h}u ${pad(mi)}m` : `${mi}m ${pad(Math.floor((ms % 60000) / 1000))}s`;
-      sub.textContent = `nog tot ${fmtTime(todayEnd)}`;
+      sub.textContent = `${Math.floor(tf * 100)}% · tot ${fmtTime(todayEnd)}`;
+    }
+    // kwarten markeren + resterende tijd in woorden
+    const working = todayInfo && todayInfo.active && workToday;
+    $("tb-scale").querySelectorAll("span").forEach(sp => sp.classList.toggle("hit", working && tf * 100 >= +sp.dataset.q && +sp.dataset.q > 0));
+    const left = $("tb-left");
+    if (!working) left.innerHTML = "";
+    else if (tf <= 0) left.innerHTML = `Je dag begint om <strong>${fmtTime(S.startUur)}</strong> en duurt tot <strong>${fmtTime(todayEnd)}</strong>, ${fmtHM((todayEnd - S.startUur) * 3600000)}.`;
+    else if (tf >= 1) left.innerHTML = `<strong>100%</strong>, je dag zit erop.`;
+    else {
+      const span = todayEnd - S.startUur, pct = tf * 100;
+      const nextQ = [25, 50, 75, 100].find(q => q > pct);
+      const nextAt = at(now, S.startUur + span * nextQ / 100);
+      left.innerHTML = `Nog <strong>${fmtHM(at(now, todayEnd) - now)}</strong> tot ${fmtTime(todayEnd)}. Je zit op <strong>${num(pct, 1)}%</strong>`
+        + (nextQ < 100 ? `, <strong>${nextQ}%</strong> om ${fmtTime(S.startUur + span * nextQ / 100)} (over ${fmtHM(nextAt - now)}).` : ", het laatste kwart.");
     }
     // eindtijd vandaag
     const row = $("tb-end"), inp = $("f-eindvandaag"), reset = $("tb-end-reset");
@@ -1641,7 +1841,7 @@
     const custom = todayEnd !== S.eindUur;
     reset.hidden = !custom;
     reset.textContent = `Normaal (${fmtTime(S.eindUur)})`;
-    $("tb-end-note").textContent = custom ? `Je dagloon blijft ${eur.format(todayInfo ? monthData(now.getFullYear(), now.getMonth(), now).perDay : 0)}, het loopt vandaag alleen sneller op.` : "";
+    $("tb-end-note").textContent = custom ? `Je dagloon blijft ${eur.format(dayValue(midnight(now)))}, het loopt vandaag alleen sneller op.` : "";
   }
   function setTodayEnd(v) {
     const n = new Date(), k = keyOf(n), o = { ...(settings.eindOverrides || {}) };
@@ -1660,7 +1860,8 @@
   // ================= Render =================
   let lastSecond = -1, lastHistory = 0;
   function refreshSlow(now, force) {
-    const y = now.getFullYear(), m = now.getMonth(), md = monthData(y, m, now);
+    const y = now.getFullYear(), m = now.getMonth(), md = periodData(now);
+    const unit = periodMode() ? "deze loonperiode" : "deze maand";
     renderPayday(now); renderWeekend(now); renderEindCountdown(now);
     const todayInfo = md.info.find(x => sameDay(x.date, now));
     const tf = todayInfo && todayInfo.active ? todayInfo.fraction : 0;
@@ -1685,10 +1886,11 @@
       sub = `Weekend. De teller staat stil en loopt maandag om ${fmtTime(S.startUur)} weer.`;
     }
     sub += weekPlan(now);
-    sub += ` Nog ${remaining} ${remaining === 1 ? "werkdag" : "werkdagen"} te gaan deze maand.`;
+    sub += ` Nog ${remaining} ${remaining === 1 ? "werkdag" : "werkdagen"} te gaan ${unit}.`;
     $("sub").innerHTML = sub;
     $("sub-txt").textContent = subTxt;
-    $("bar-right").textContent = eur.format(md.full || S.nettoMaand) + " deze maand";
+    $("bar-right").textContent = eur.format(md.full || S.nettoMaand) + " " + unit;
+    $("s-left-lbl").textContent = `Nog te verdienen ${unit}`;
     $("s-day").textContent = eur.format(md.perDay);
     $("s-hour").textContent = eur.format(md.perDay / S.uren);
     $("s-left").textContent = eur.format(Math.max(0, md.full - md.total));
@@ -1697,7 +1899,7 @@
     let week = 0;
     for (let i = 0; i < 5; i++) {
       const d = addDays(mon, i); if (d < S.start) continue;
-      week += dayFraction(d, now) * (S.nettoMaand / weekdaysOfMonth(d.getFullYear(), d.getMonth()).length);
+      week += dayFraction(d, now) * dayValue(d);
     }
     $("s-week").textContent = eur.format(week);
     $("tb-rate").textContent = `€ ${(md.perDay / (todayUren * 60)).toLocaleString("nl-NL", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} per minuut`;
@@ -1707,7 +1909,7 @@
 
     renderTodayRing(now, todayInfo, tf, workToday, todayEnd);
     renderHours(now);
-    const titleTotal = monthData(now.getFullYear(), now.getMonth(), now).total;
+    const titleTotal = md.total;
     document.title = `${eur.format(titleTotal)} · Loonteller`;
     $("at-label").textContent = `Totaal sinds ${S.start.toLocaleDateString("nl-NL", { day: "numeric", month: "long" })}`;
     const eind = parseDate(settings.eindDatum);
@@ -1725,7 +1927,7 @@
 
   function render() {
     const now = new Date(), y = now.getFullYear(), m = now.getMonth();
-    const md = monthData(y, m, now);
+    const md = periodData(now);
     buildDial(y, m, md);
     const total = md.total, whole = Math.floor(total), rest = total - whole;
     const cents = Math.floor(rest * 100), tick = Math.floor((rest * 100 - cents) * 100);
@@ -1762,6 +1964,7 @@
     const next = cur === "dark" ? "light" : "dark";
     document.documentElement.dataset.theme = next;
     try { localStorage.setItem("loonteller-theme", next); } catch (e) {}
+    markUpdated();
   });
 
   applySettings();
